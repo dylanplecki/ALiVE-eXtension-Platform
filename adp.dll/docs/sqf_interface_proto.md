@@ -7,7 +7,7 @@ SQF Interface Protocol
 	+-------------------------------------------+
 	| Byte		| Description					|
 	+-------------------------------------------+
-	| 0			| Packet Flag					|
+	| 0			| Packet Status Flag			|
 	| 1			| Function Address				|
 	| 2 - Inf	| Packet Message				|
 	+-------------------------------------------+
@@ -15,13 +15,8 @@ SQF Interface Protocol
 ## Guarantees
 
 - Returned message is valid SQF code in string form.
-- Messages sent to the extension can be delimited, but only by the following UTF character codes:
-	- File separator (UTF+001C &#28)
-	- Group separator (UTF+001D &#29)
-	- Record separator (UTF+001E &#30)
-	- Unit separator (UTF+001F &#31)
-  These delimiters are listed in decreasing hierarchicy, from most encompassing to least significant.
-  The implementation of these separators are dependent on the called function, and are not universal.
+- Messages sent to the extension can be delimited, but only by the following UTF character code(s):
+	1. Unit separator (UTF+001F &#31)
 
 ## SQF Interaction
 
