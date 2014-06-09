@@ -27,10 +27,10 @@ namespace ADP
 		void ReturnPackage(ADP::Package* a_package, const size_t &buffer_size, std::stringstream &output_stream);
 
 		// IO Functions
-		bool Import(const char* &data);
-		bool Export(const size_t &buffer_size, char* &buffer);
-		bool Export(const uint32_t &a_package_id, const size_t &buffer_size, char* &buffer);
-		bool QueueForExport(ADP::Package* a_package);
+		void Import(const boost::string_ref &data, const size_t &buffer_size, std::stringstream &output_stream);
+		void Export(const size_t &buffer_size, std::stringstream &output_stream); // TODO
+		void Export(const uint32_t &a_package_id, const size_t &buffer_size, std::stringstream &output_stream); // TODO
+		void QueueForExport(ADP::Package* a_package); // TODO
 
 	public:
 		TranslationUnit();

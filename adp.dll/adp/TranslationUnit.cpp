@@ -60,6 +60,23 @@ void ADP::TranslationUnit::ReturnPackage(ADP::Package* a_package, const size_t &
 }
 
 
+void ADP::TranslationUnit::Import(const boost::string_ref &data, const size_t &buffer_size, std::stringstream &output_stream)
+{
+	ADP::Package* call_package = new ADP::Package(data);
+
+	if (data[STATUS_POS] == SF_ASYNC) // Process in new thread
+	{
+		// TODO
+	}
+	else // Process synchronously in current thread
+	{
+		CallFunction(call_package);
+		ReturnPackage(call_package, buffer_size, output_stream);
+		return;
+	}
+}
+
+
 void ADP::TranslationUnit::Receive(const char* &data, size_t buffer_size, char* &output_buffer)
 {
 	buffer_size -= 2;
@@ -74,25 +91,13 @@ void ADP::TranslationUnit::Receive(const char* &data, size_t buffer_size, char* 
 		switch (data[STATUS_POS])
 		{
 		case SF_NONE: // Return next package, if available
-
+			Export(buffer_size, output_stream);
 			break;
 		case SF_CHUNK: // Find and return next chunk of package
-
+			// TODO
 			break;
 		case SF_SYNC: case SF_ASYNC: // Run function with message
-			ADP::Package* call_package = new ADP::Package(data_wrap);
-
-			if (data[STATUS_POS] == SF_ASYNC) // Process in new thread
-			{
-				// TODO
-			}
-			else // Process synchronously in current thread
-			{
-				CallFunction(call_package);
-				ReturnPackage(call_package, buffer_size, output_stream);
-				return;
-			}
-
+			Import(data_wrap, buffer_size, output_stream);
 			break;
 		default: // Return invalid status
 			ReturnError("Invalid arguments: Status not valid.", output_stream);
