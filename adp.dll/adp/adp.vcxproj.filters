@@ -21,13 +21,19 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Package.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="protocol_def.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TranslationUnit.h">
+    <ClInclude Include="adp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="session.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="library.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,16 +41,19 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="adp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Package.cpp">
+    <ClCompile Include="adp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TranslationUnit.cpp">
+    <ClCompile Include="logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="session.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="library.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
