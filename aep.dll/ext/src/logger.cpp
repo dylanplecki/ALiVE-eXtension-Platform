@@ -1,14 +1,14 @@
 
 // Program Headers
-#include <adp/stdafx.h>
-#include <adp/logger.h>
-#include <adp/logger_boost.h>
+#include <aep/stdafx.h>
+#include <aep/logger.h>
+#include <aep/logger_boost.h>
 
 // Boost Headers
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 
-namespace adp
+namespace aep
 {
 	namespace logger
 	{

@@ -1,11 +1,11 @@
 
 // Program Headers
-#include <adp/stdafx.h>
-#include <adp/session.h>
-#include <adp/package.h>
-#include <adp/protocol_def.h>
+#include <aep/stdafx.h>
+#include <aep/session.h>
+#include <aep/package.h>
+#include <aep/protocol_def.h>
 
-namespace adp
+namespace aep
 {
 	session::session()
 	{

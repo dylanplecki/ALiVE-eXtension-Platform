@@ -1,15 +1,15 @@
 
 // Program Headers
-#include <adp/stdafx.h>
-#include <adp/handler.h>
-#include <adp/session.h>
-#include <adp/package.h>
+#include <aep/stdafx.h>
+#include <aep/handler.h>
+#include <aep/session.h>
+#include <aep/package.h>
 
 // STD Headers
 #include <mutex>
 #include <vector>
 
-namespace adp
+namespace aep
 {
 	struct handler::internals
 	{

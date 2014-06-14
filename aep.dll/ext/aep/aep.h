@@ -10,11 +10,11 @@
 // Windows Headers
 #include <Windows.h>
 
-#define ADP_LOG_FILE "log\adp_%Y-%m-%d_%H-%M-%S.log"
-#define ADP_LOG_LEVEL adp::logger::info
-#define ADP_LOG_FORMAT "[%TimeStamp%] <%Severity%> : %Message%"
+#define AEP_LOG_FILE "log\aep_%Y-%m-%d_%H-%M-%S.log"
+#define AEP_LOG_LEVEL aep::logger::info
+#define AEP_LOG_FORMAT "[%TimeStamp%] <%Severity%> : %Message%"
 
-namespace adp
+namespace aep
 {
 	class session; // Defined in <src/session.cpp>
 

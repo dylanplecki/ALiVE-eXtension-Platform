@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by adp.rc
+// Used by aep.rc
 
 // Next default values for new objects
 // 

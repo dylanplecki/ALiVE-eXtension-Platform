@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-namespace adp
+namespace aep
 {
 	class package; // Defined in <src/package.cpp>
 	class session; // Defined in <src/session.cpp>

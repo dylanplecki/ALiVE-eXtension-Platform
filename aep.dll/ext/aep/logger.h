@@ -1,10 +1,10 @@
 #pragma once
 
 // Macros
-#define ADP_LOG_MSG(msg) adp::logger::global(msg)
-#define ADP_LOG_MSG_SEV(lvl, msg) adp::logger::global(adp::logger::lvl, msg)
+#define AEP_LOG_MSG(msg) aep::logger::global(msg)
+#define AEP_LOG_MSG_SEV(lvl, msg) aep::logger::global(adp::logger::lvl, msg)
 
-namespace adp
+namespace aep
 {
 	namespace logger
 	{

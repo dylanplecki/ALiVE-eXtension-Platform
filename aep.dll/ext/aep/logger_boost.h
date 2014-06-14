@@ -1,7 +1,7 @@
 #pragma once
 
 // Program Headers
-#include <adp/logger.h>
+#include <aep/logger.h>
 
 // Boost Headers
 #include <boost/log/core.hpp>
@@ -10,10 +10,10 @@
 #include <boost/log/sources/severity_channel_logger.hpp>
 
 // Macros
-#define ADP_LOG_STREAM adp::logger::global()
-#define ADP_LOG_STREAM_SEV(lvl) adp::logger::global(adp::logger::lvl)
+#define AEP_LOG_STREAM aep::logger::global()
+#define AEP_LOG_STREAM_SEV(lvl) aep::logger::global(aep::logger::lvl)
 
-namespace adp
+namespace aep
 {
 	namespace logger
 	{

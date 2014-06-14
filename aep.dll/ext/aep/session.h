@@ -1,7 +1,7 @@
 #pragma once
 
 // Program Headers
-#include <adp/library.h>
+#include <aep/library.h>
 
 // STD Headers
 #include <memory>
@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <queue>
 
-namespace adp
+namespace aep
 {
 	class package; // Defined in <src/package.cpp>
 

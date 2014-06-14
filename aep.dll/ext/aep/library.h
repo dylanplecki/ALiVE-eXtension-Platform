@@ -14,7 +14,7 @@
 #define E_LIB_NOT_FOUND 0
 #define E_FUNC_NOT_FOUND 1
 
-namespace adp
+namespace aep
 {
 	class handler; // Defined in <src/handler.cpp>
 
@@ -22,7 +22,7 @@ namespace adp
 	Export function prototype:
 	void __declspec(dllexport) __stdcall MyExportedFunction(adp::handler* call_handler);
 	*/
-	typedef void(__stdcall *f_export)(adp::handler*);
+	typedef void(__stdcall *f_export)(handler*);
 	typedef std::unordered_map<std::string, f_export> function_lookup_list;
 
 	class library

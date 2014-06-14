@@ -1,10 +1,10 @@
 
 // Program Headers
-#include <adp/stdafx.h>
-#include <adp/adp.h>
-#include <adp/session.h>
-#include <adp/logger_boost.h>
-#include <adp/protocol_def.h>
+#include <aep/stdafx.h>
+#include <aep/aep.h>
+#include <aep/session.h>
+#include <aep/logger_boost.h>
+#include <aep/protocol_def.h>
 
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
@@ -12,7 +12,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 
 
-namespace adp
+namespace aep
 {
 	std::shared_ptr<session> current_session;
 	std::atomic<std::string> current_lib_path;
@@ -28,7 +28,7 @@ namespace adp
 			&hm))
 		{
 			int ret = GetLastError();
-			BOOST_LOG(adp::logger::global_logger) << "GetModuleHandle returned: " << std::to_string(ret);
+			BOOST_LOG(logger::global_logger) << "GetModuleHandle returned: " << std::to_string(ret);
 		}
 
 		GetModuleFileNameA(hm, path_buffer, sizeof(path_buffer));
@@ -43,17 +43,17 @@ namespace adp
 		current_lib_path = lib_path();
 
 		// Initialize logger
-		adp::logger::initialize((current_lib_path.load() + ADP_LOG_FILE).c_str(), ADP_LOG_FORMAT, ADP_LOG_LEVEL);
+		logger::initialize((current_lib_path.load() + AEP_LOG_FILE).c_str(), AEP_LOG_FORMAT, AEP_LOG_LEVEL);
 
 		// Log standard information
-		ADP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Loaded";
-		ADP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path.load();
+		AEP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Loaded";
+		AEP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path.load();
 	}
 
 	void lib_unload()
 	{
 		// Log standard information
-		ADP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
+		AEP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
 	}
 
 	void stop_current_session()
@@ -61,7 +61,7 @@ namespace adp
 		if (!current_session)
 		{
 			current_session.reset();
-			ADP_LOG_STREAM_SEV(info) << "Current native session stopped";
+			AEP_LOG_STREAM_SEV(info) << "Current native session stopped";
 		}
 	}
 
@@ -69,7 +69,7 @@ namespace adp
 	{
 		stop_current_session();
 		current_session = std::shared_ptr<session>(new session);
-		ADP_LOG_STREAM_SEV(info) << "New native session started";
+		AEP_LOG_STREAM_SEV(info) << "New native session started";
 	}
 }
 
@@ -89,15 +89,15 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function)
 		switch (function[0])
 		{
 		case SF_NEW_SESSION:
-			adp::start_new_session();
+			aep::start_new_session();
 			break;
 		case SF_DEL_SESSION:
-			adp::stop_current_session();
+			aep::stop_current_session();
 			break;
 		}
 	}
 
 	// Find current session and run
-	if (adp::current_session)
-		adp::current_session->process_input(function, outputSize, output);
+	if (aep::current_session)
+		aep::current_session->process_input(function, outputSize, output);
 }

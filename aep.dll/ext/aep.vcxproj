@@ -13,7 +13,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FDD1ABA4-B975-4EC3-8DBF-EC35558E361D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>adp</RootNamespace>
+    <RootNamespace>aep</RootNamespace>
+    <ProjectName>aep</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -59,7 +60,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>adp/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>aep/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -75,7 +76,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <PrecompiledHeaderFile>adp/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>aep/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,19 +86,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="adp\handler.h" />
-    <ClInclude Include="adp\library.h" />
-    <ClInclude Include="adp\logger.h" />
-    <ClInclude Include="adp\logger_boost.h" />
-    <ClInclude Include="adp\package.h" />
-    <ClInclude Include="adp\protocol_def.h" />
+    <ClInclude Include="aep\handler.h" />
+    <ClInclude Include="aep\library.h" />
+    <ClInclude Include="aep\logger.h" />
+    <ClInclude Include="aep\logger_boost.h" />
+    <ClInclude Include="aep\package.h" />
+    <ClInclude Include="aep\protocol_def.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="adp\adp.h" />
-    <ClInclude Include="adp\session.h" />
-    <ClInclude Include="adp\stdafx.h" />
+    <ClInclude Include="aep\aep.h" />
+    <ClInclude Include="aep\session.h" />
+    <ClInclude Include="aep\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\adp.cpp" />
+    <ClCompile Include="src\aep.cpp" />
     <ClCompile Include="src\dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -114,15 +115,15 @@
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">adp/stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">adp/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">aep/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">aep/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="adp.rc" />
+    <ResourceCompile Include="aep.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="adp.aps" />
+    <None Include="aep.aps" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

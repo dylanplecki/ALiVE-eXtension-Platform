@@ -1,10 +1,10 @@
 
 // Program Headers
-#include <adp/stdafx.h>
-#include <adp/library.h>
-#include <adp/logger_boost.h>
+#include <aep/stdafx.h>
+#include <aep/library.h>
+#include <aep/logger_boost.h>
 
-namespace adp
+namespace aep
 {
 	library::library(const char* lib_path)
 	{
@@ -14,7 +14,7 @@ namespace adp
 
 		if (!module_)
 		{
-			ADP_LOG_STREAM_SEV(error) << "Requested library not found at location " << lib_path;
+			AEP_LOG_STREAM_SEV(error) << "Requested library not found at location " << lib_path;
 			throw E_LIB_NOT_FOUND;
 		}
 	}
@@ -34,7 +34,7 @@ namespace adp
 			function = (f_export)GetProcAddress(module_, function_name);
 
 			if (!function)
-				ADP_LOG_STREAM_SEV(error) << "Requested function '" << function_name << "' not found";
+				AEP_LOG_STREAM_SEV(error) << "Requested function '" << function_name << "' not found";
 
 			functions_[function_name] = function;
 		}

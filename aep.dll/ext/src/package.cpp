@@ -1,12 +1,12 @@
 
 // Program Headers
-#include <adp/stdafx.h>
-#include <adp/package.h>
+#include <aep/stdafx.h>
+#include <aep/package.h>
 
 // STD Headers
 #include <algorithm>
 
-namespace adp
+namespace aep
 {
 	package::package(const char* source_data) : source_(source_data), copy_(false)
 	{
