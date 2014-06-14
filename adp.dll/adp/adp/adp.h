@@ -2,10 +2,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-// Program Headers
-#include <adp/handler.h>
-
 // STD Headers
+#include <atomic>
+#include <memory>
 #include <string>
 
 // Windows Headers
@@ -17,9 +16,14 @@
 
 namespace adp
 {
-	extern std::string current_lib_path;
+	class session; // Defined in <src/session.cpp>
+
+	extern std::shared_ptr<session> current_session;
+	extern std::atomic<std::string> current_lib_path;
 
 	std::string lib_path();
 	void lib_load();
 	void lib_unload();
+	void stop_current_session();
+	void start_new_session();
 }

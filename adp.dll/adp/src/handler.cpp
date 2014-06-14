@@ -3,9 +3,11 @@
 #include <adp/stdafx.h>
 #include <adp/handler.h>
 #include <adp/session.h>
+#include <adp/package.h>
 
 // STD Headers
 #include <mutex>
+#include <vector>
 
 namespace adp
 {
@@ -13,27 +15,32 @@ namespace adp
 	{
 		std::mutex main_lock_;
 		size_t handler_id_;
-		session* session_;
+		std::shared_ptr<session> session_handle_;
+		std::shared_ptr<package> package_handle_;
 	};
 
-	handler::handler(session* parent_session, const size_t &handler_id) : internals_(new internals)
+	handler::handler(const std::shared_ptr<session> &parent_session, const std::shared_ptr<package> &call_package) : internals_(new internals)
 	{
-		internals_->handler_id_ = handler_id;
-		internals_->session_ = parent_session;
+		internals_->session_handle_ = parent_session;
+		internals_->package_handle_ = call_package;
 	}
 
 	handler::~handler()
 	{
+		std::lock_guard<std::mutex> lock(internals_->main_lock_);
 		delete internals_;
 	}
 
-	bool handler::session_active()
+	bool handler::active_session()
 	{
-		return internals_->session_->active();
+		std::lock_guard<std::mutex> lock(internals_->main_lock_);
+		return internals_->session_handle_->active();
 	}
 
-	void handler::engine_export(const char* output_data)
+	void handler::export_data(const char* output_data)
 	{
-
+		std::lock_guard<std::mutex> lock(internals_->main_lock_);
+		internals_->package_handle_->write_sink(output_data);
+		internals_->session_handle_->queue_output(internals_->package_handle_);
 	}
 }

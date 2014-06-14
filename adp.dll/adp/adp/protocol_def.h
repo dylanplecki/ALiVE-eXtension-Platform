@@ -14,5 +14,7 @@
 #define SF_ERROR		3	// Error contained in message
 #define SF_CHUNK		4	// Signals that data is chunked
 #define SF_SYNC			5	// Request for synchronous code
-#define SF_ASYNC		6	// Request for async code
-#define SF_HANDLE		7	// Return for async calls
+#define SF_ASYNC		6	// Request for asynchronous code
+#define SF_HANDLE		7	// Return for asynchronous calls
+#define SF_NEW_SESSION	8	// Start a new native session
+#define SF_DEL_SESSION	9	// Stop the current native session

@@ -89,6 +89,7 @@
     <ClInclude Include="adp\library.h" />
     <ClInclude Include="adp\logger.h" />
     <ClInclude Include="adp\logger_boost.h" />
+    <ClInclude Include="adp\package.h" />
     <ClInclude Include="adp\protocol_def.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="adp\adp.h" />
@@ -108,6 +109,7 @@
     <ClCompile Include="src\handler.cpp" />
     <ClCompile Include="src\library.cpp" />
     <ClCompile Include="src\logger.cpp" />
+    <ClCompile Include="src\package.cpp" />
     <ClCompile Include="src\session.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

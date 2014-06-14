@@ -1,10 +1,12 @@
 #pragma once
 
 // STD Headers
+#include <memory>
 #include <string>
 
 namespace adp
 {
+	class package; // Defined in <src/package.cpp>
 	class session; // Defined in <src/session.cpp>
 
 	class handler
@@ -14,10 +16,10 @@ namespace adp
 		internals* internals_;
 
 	public:
-		handler(session* parent_session, const size_t &handler_id);
+		handler(const std::shared_ptr<session> &parent_session, const std::shared_ptr<package> &call_package);
 		~handler();
 
-		bool session_active();
-		void engine_export(const char* output_data);
+		bool active_session();
+		void export_data(const char* output_data);
 	};
 }
