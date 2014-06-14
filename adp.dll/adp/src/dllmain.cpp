@@ -3,8 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 
 // Program Headers
-#include "stdafx.h"
-#include "adp.h"
+#include <adp/stdafx.h>
+#include <adp/adp.h>
 
 // Windows Headers
 #include <windows.h>
@@ -17,12 +17,12 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		ADP::LibLoad();
+		adp::lib_load();
 		break;
 	case DLL_THREAD_ATTACH: // Do nothing
 	case DLL_THREAD_DETACH: // Do nothing
 	case DLL_PROCESS_DETACH:
-		ADP::LibUnload();
+		adp::lib_unload();
 		break;
 	}
 

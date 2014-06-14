@@ -1,8 +1,8 @@
 
 // Program Headers
-#include "stdafx.h"
-#include "logger.h"
-#include "logger_boost.h"
+#include <adp/stdafx.h>
+#include <adp/logger.h>
+#include <adp/logger_boost.h>
 
 // Boost Headers
 #include <boost/log/utility/setup/file.hpp>
@@ -12,6 +12,8 @@ namespace adp
 {
 	namespace logger
 	{
+		logger_type global_logger(boost::log::keywords::severity = info, boost::log::keywords::channel = "global");
+
 		void initialize(const char* log_file, const char* log_format, const severity_level &log_level)
 		{
 			boost::log::register_simple_formatter_factory<severity_level, char>("Severity");

@@ -1,7 +1,7 @@
 #pragma once
 
 // Program Headers
-#include "logger.h"
+#include <adp/logger.h>
 
 // Boost Headers
 #include <boost/log/core.hpp>
@@ -22,7 +22,7 @@ namespace adp
 		BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity", severity_level);
 		BOOST_LOG_ATTRIBUTE_KEYWORD(channel, "Channel", std::string);
 
-		logger_type global_logger(boost::log::keywords::severity = info, boost::log::keywords::channel = "global");
+		extern logger_type global_logger;
 
 		boost::log::record_ostream& global();
 		boost::log::record_ostream& global(const severity_level &severity);

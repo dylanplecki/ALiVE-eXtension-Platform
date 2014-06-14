@@ -1,0 +1,46 @@
+
+[1:54:57 PM] AJCStriker: /*
+    The Username ( param: username ) and Password ( param: password ) are the Strings representing the authorisation details for the database.
+    This function must be called before any other function to initialise the database.
+*/
+rpc.register("authenticateUser", function(callback, username, password) {
+
+
+[1:55:03 PM] AJCStriker: /*
+    Send Data ( param: data ) to CouchDB. Boolean flag ( param: isBulk ) sets whether data will be sent via Bulk API.
+    The Module type ( param: module ) is a string representing the module this data originates from.
+    Callback is the return callback. It is returned instantly, to prevent blocking on the SQF side.
+*/
+rpc.register("sendData", function(callback, data, isBulk, module) {
+
+
+[1:55:09 PM] AJCStriker: /*
+    Retrieve the data held for given Keys ( param: keys ) to CouchDB. Boolean flag ( param: isBulk ) sets whether data will be returned via Bulk API.
+    The Module type ( param: module ) is a string representing the module this data originates from.
+    Callback is the return callback. It is returned upon the data being retrieved, and is sent back to SQF upon receiving data.
+*/
+rpc.register("getData", function(callback, keys, isBulk, module) {
+
+
+[1:55:14 PM] AJCStriker: /*
+    Blocking function that will query an external API provided by hostip.info to find Host Server Location.
+
+    Example return:
+      CITYNAME,COUNTRY NAME
+*/
+rpc.register("getLocation", function(callback, ipaddress) {
+
+
+[1:55:20 PM] AJCStriker: /*
+    Blocking function that will query an external API provided by hostip.info.
+
+    Example return:
+      XXX.XXX.XXX.XXX
+*/
+rpc.register("getIPAddress", function(callback) {
+
+
+[1:55:25 PM] AJCStriker: /*
+    A blocking function that will return the weather at the server's current location.
+*/
+rpc.register("getWeatherAtServerLocation", function(callback) {

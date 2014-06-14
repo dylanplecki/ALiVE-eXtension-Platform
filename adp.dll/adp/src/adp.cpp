@@ -1,8 +1,8 @@
 
 // Program Headers
-#include "stdafx.h"
-#include "adp.h"
-#include "logger_boost.h"
+#include <adp/stdafx.h>
+#include <adp/adp.h>
+#include <adp/logger_boost.h>
 
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
@@ -12,6 +12,8 @@
 
 namespace adp
 {
+	std::string current_lib_path;
+
 	std::string lib_path()
 	{
 		char path_buffer[MAX_PATH];
@@ -23,7 +25,7 @@ namespace adp
 			&hm))
 		{
 			int ret = GetLastError();
-			BOOST_LOG(adp::logger::global_logger) << "";
+			BOOST_LOG(adp::logger::global_logger) << "GetModuleHandle returned: " << std::to_string(ret);
 		}
 
 		GetModuleFileNameA(hm, path_buffer, sizeof(path_buffer));

@@ -41,13 +41,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\lib\c\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\lib\c\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\output\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\lib\c\boost;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\lib\c\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\output\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,6 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>adp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -70,6 +75,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PrecompiledHeaderFile>adp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,17 +85,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="library.h" />
-    <ClInclude Include="logger.h" />
-    <ClInclude Include="protocol_def.h" />
+    <ClInclude Include="adp\handler.h" />
+    <ClInclude Include="adp\library.h" />
+    <ClInclude Include="adp\logger.h" />
+    <ClInclude Include="adp\logger_boost.h" />
+    <ClInclude Include="adp\protocol_def.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="adp.h" />
-    <ClInclude Include="session.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="adp\adp.h" />
+    <ClInclude Include="adp\session.h" />
+    <ClInclude Include="adp\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="adp.cpp" />
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="src\adp.cpp" />
+    <ClCompile Include="src\dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -97,16 +105,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="library.cpp" />
-    <ClCompile Include="logger.cpp" />
-    <ClCompile Include="session.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\handler.cpp" />
+    <ClCompile Include="src\library.cpp" />
+    <ClCompile Include="src\logger.cpp" />
+    <ClCompile Include="src\session.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">adp/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">adp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="adp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="adp.aps" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
