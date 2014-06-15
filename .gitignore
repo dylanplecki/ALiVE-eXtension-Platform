@@ -25,6 +25,7 @@ build/
 *_i.c
 *_p.c
 *.ilk
+*.key
 *.meta
 *.obj
 *.pch

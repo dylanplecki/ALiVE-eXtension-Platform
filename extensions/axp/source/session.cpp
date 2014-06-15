@@ -12,7 +12,7 @@
 #include <cstdint>
 
 // Key Files
-#include <keys/auth.h>
+#include <keys/auth.key>
 
 namespace axp
 {
