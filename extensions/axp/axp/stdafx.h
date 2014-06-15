@@ -29,9 +29,5 @@
 
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/sources/severity_channel_logger.hpp>
 
 #endif // USE_PCH

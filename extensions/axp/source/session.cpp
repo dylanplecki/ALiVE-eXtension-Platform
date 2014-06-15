@@ -11,6 +11,9 @@
 // STD Headers
 #include <cstdint>
 
+// Key Files
+#include <keys/auth.h>
+
 namespace axp
 {
 	extern std::string current_lib_path; // Defined in <axp/axp.cpp>
@@ -174,6 +177,10 @@ namespace axp
 
 			case SF_COPY: // Copy input data to output buffer
 				strncpy(output_buffer, input_data, output_size);
+				break;
+
+			case SF_AUTH: // Get extension authorization key
+				strncpy(output_buffer, KEY_AUTH_MAIN, output_size);
 				break;
 
 			case SF_SYNC: case SF_ASYNC: // Run function from library
