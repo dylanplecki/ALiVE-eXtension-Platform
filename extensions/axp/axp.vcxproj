@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="axp.aps" />
+    <None Include="keys\auth.key" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

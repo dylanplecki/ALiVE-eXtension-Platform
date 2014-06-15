@@ -4,9 +4,7 @@
 #include <memory>
 #include <string>
 
-#define axp_LOG_FILE "log\axp_%Y-%m-%d_%H-%M-%S.log"
-#define axp_LOG_LEVEL axp::logger::info
-#define axp_LOG_FORMAT "[%TimeStamp%] <%Severity%> : %Message%"
+#define E_LIB_PATH_NOT_FOUND 0
 
 namespace axp
 {

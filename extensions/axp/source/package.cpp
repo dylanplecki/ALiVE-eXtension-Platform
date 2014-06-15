@@ -81,24 +81,27 @@ namespace axp
 	size_t package::flush_sink(size_t buffer_size, char* output_buffer, char** end_ptr)
 	{
 		std::lock_guard<std::mutex> lk(lock_);
-		const char* sink_ptr = sink_.c_str();
+		size_t sink_size = sink_.size();
 
-		if (buffer_size > sink_.size())
-			buffer_size = sink_.size();
-
-		if (buffer_size)
+		if (sink_size && buffer_size)
 		{
+			const char* sink_ptr = sink_.c_str();
+
+			if (buffer_size > sink_size)
+				buffer_size = sink_size;
+
 			std::copy(sink_ptr, (sink_ptr + buffer_size), output_buffer);
 
 			if (end_ptr)
 				*end_ptr = output_buffer + buffer_size;
 
-			if (buffer_size == sink_.size())
+			if (buffer_size == sink_size)
 				sink_.clear();
 			else
 				sink_ = sink_.substr(buffer_size, std::string::npos);
-		}
 
-		return sink_.size();
+			return sink_.size();
+		}
+		return sink_size;
 	}
 }

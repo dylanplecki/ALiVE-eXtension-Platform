@@ -1,12 +1,12 @@
+#if defined(_WIN32) || defined(_WIN64)
 
 // Program Headers
 #include <axp/stdafx.h>
 #include <axp/axp.h>
 
-#define WIN32_LEAN_AND_MEAN
-
 // Windows Headers
-#include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 BOOL APIENTRY DllMain( HMODULE hModule,
 						DWORD  ul_reason_for_call,
@@ -27,3 +27,5 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 	return TRUE;
 }
+
+#endif

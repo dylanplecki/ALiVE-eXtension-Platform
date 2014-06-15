@@ -6,15 +6,11 @@
 #pragma once
 #ifdef USE_PCH
 
-#ifdef _WIN32 // Windows environment
-
-	// Windows Defines
-	#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
-
-	// Windows Headers
-	#include <windows.h>
-
-#endif // _WIN32
+// OS-Dependent Headers
+#if defined(_WIN32) || defined(_WIN64)
+	#define WIN32_LEAN_AND_MEAN
+	#include <Windows.h>
+#endif
 
 // Standard Library Headers
 #include <algorithm>

@@ -8,15 +8,39 @@
 #include <axp/logger_boost.h>
 #include <axp/protocol_def.h>
 
-// STD Headers
-#include <cstdint>
-
 // Key Files
 #include <keys/auth.key>
 
 namespace axp
 {
 	extern std::string current_lib_path; // Defined in <axp/axp.cpp>
+
+	void session::add_to_storage(const std::shared_ptr<package> &package_ref)
+	{
+		std::lock_guard<std::mutex> lock(storage_lock_);
+		auto package_ptr_int = reinterpret_cast<std::uintptr_t>(package_ref.get());
+
+		if (!package_output_storage_.count(package_ptr_int))
+			package_output_storage_.emplace(package_ptr_int, package_ref);
+	}
+
+	void session::remove_from_storage(const std::uintptr_t &package_ptr_int)
+	{
+		std::lock_guard<std::mutex> lock(storage_lock_);
+
+		if (package_output_storage_.count(package_ptr_int))
+			package_output_storage_.erase(package_ptr_int);
+	}
+
+	void session::remove_from_storage(package* package_ptr)
+	{
+		remove_from_storage(reinterpret_cast<std::uintptr_t>(package_ptr));
+	}
+
+	void session::remove_from_storage(const std::shared_ptr<package> &package_ref)
+	{
+		remove_from_storage(package_ref.get());
+	}
 
 	f_export session::pull_lib_function(boost::string_ref data_in)
 	{
@@ -84,37 +108,39 @@ namespace axp
 			std::uintptr_t addr_dec(strtoul(chunk_addr_str, nullptr, 0));
 			package* ref_package(reinterpret_cast<package*>(addr_dec));
 			
-			if (ref_package->flush_sink(output_size, output_buffer, nullptr))
-				return SF_CHUNK; // More to pull
+			if (ref_package)
+			{
+				if (ref_package->flush_sink(output_size, output_buffer, nullptr))
+					return SF_CHUNK; // More to pull
+				else
+					remove_from_storage(addr_dec);
+				return SF_GOOD;
+			}
 			else
 			{
-				if (package_output_storage_.count(ref_package))
-					package_output_storage_.erase(ref_package);
-				return SF_GOOD; // Last part, EOF
+				AXP_LOG_STREAM_SEV(warning) << "Cast from stringized pointer address '" << chunk_addr_str << "' returned null";
+				return SF_ERROR;
 			}
 		}
 		catch (std::bad_cast& error)
 		{
-			AXP_LOG_STREAM_SEV(error) << "Bad cast from stringized pointer address to output data: " << error.what();
+			AXP_LOG_STREAM_SEV(error) << "Bad cast from stringized pointer address '" << chunk_addr_str << "': " << error.what();
 			return SF_ERROR;
 		}
+		return SF_NONE;
 	}
 
 	char session::export_package(const std::shared_ptr<package> &output_package, size_t output_size, char* output_buffer)
 	{
-		package* main_pkg_ptr = output_package.get();
-
 		if (output_package->sink_size() <= (size_t)output_size)
 		{
 			output_package->flush_sink(output_size, output_buffer, nullptr);
-			if (package_output_storage_.count(main_pkg_ptr))
-				package_output_storage_.erase(main_pkg_ptr);
+			remove_from_storage(output_package);
 			return SF_GOOD;
 		}
 		else
 		{
-			if (!package_output_storage_.count(main_pkg_ptr))
-				package_output_storage_.emplace(main_pkg_ptr, output_package);
+			add_to_storage(output_package);
 			export_address(output_package.get(), output_buffer);
 			return SF_CHUNK;
 		}
@@ -129,6 +155,7 @@ namespace axp
 			std::shared_ptr<package> output_package = package_output_queue_.front();
 			package_output_queue_.pop();
 			lock.unlock();
+			add_to_storage(output_package);
 			export_address(output_package.get(), output_buffer);
 			return SF_HANDLE;
 		}
@@ -167,8 +194,8 @@ namespace axp
 				*return_status = export_next_package(output_size, output_buffer);
 				break;
 
-			case SF_CHUNK: // Get chunk from package storage
-				*return_status = export_chunk(input_data, output_size, output_buffer);
+			case SF_CHUNK: // Get chunk from package storage (no return status)
+				export_chunk(input_data, output_size + 1, output_buffer - 1);
 				break;
 
 			case SF_VERSION: // Get extension version information
