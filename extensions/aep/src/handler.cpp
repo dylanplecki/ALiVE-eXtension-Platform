@@ -49,12 +49,12 @@ namespace aep
 
 	size_t handler::input_size()
 	{
-		internals_->package_handle_->source_size();
+		return internals_->package_handle_->source_size();
 	}
 
 	const char* handler::input_data()
 	{
-		internals_->package_handle_->read_source();
+		return internals_->package_handle_->read_source();
 	}
 
 	std::vector<char*>& handler::arguments()

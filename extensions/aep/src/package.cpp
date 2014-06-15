@@ -50,7 +50,7 @@ namespace aep
 
 	size_t package::source_size()
 	{
-
+		return source_size_;
 	}
 
 	const char* package::read_source()
