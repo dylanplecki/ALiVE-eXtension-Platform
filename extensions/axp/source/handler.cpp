@@ -57,7 +57,7 @@ namespace axp
 		return internals_->package_handle_->read_source();
 	}
 
-	std::vector<char*>& handler::arguments()
+	std::vector<const char*>& handler::arguments()
 	{
 		return internals_->package_handle_->source_portions();
 	}

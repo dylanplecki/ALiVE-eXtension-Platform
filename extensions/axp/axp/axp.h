@@ -16,6 +16,6 @@ namespace axp
 	std::string lib_path();
 	void lib_load();
 	void lib_unload();
-	void stop_current_session();
-	void start_new_session();
+	char stop_current_session();
+	char start_new_session();
 }

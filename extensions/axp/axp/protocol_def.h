@@ -21,3 +21,4 @@
 #define SF_VERSION		10	// Get extension version information
 #define SF_COPY			11	// Copy input data to output buffer
 #define SF_AUTH			12	// Get extension authorization key
+#define SF_TEST			13	// Create a package and return handle

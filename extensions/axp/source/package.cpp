@@ -14,22 +14,17 @@ namespace axp
 	void package::init(const char* source_data, const size_t &copy_length)
 	{
 		source_size_ = copy_length;
-		source_ = new char[copy_length + 1];
-		std::copy(source_data, (source_data + copy_length), source_);
+		source_.append(source_data, copy_length);
+		source_.replace(source_.begin(), source_.end(), PORTION_DELIMITER, 0);
+		
+		const char* source_ptr = source_.c_str();
+		size_t source_len = source_.length() - 1;
 
-		size_t i = 0;
-		for (; i < copy_length; ++i)
+		for (size_t i = 0; i < source_len; ++i)
 		{
-			if (!source_[i]) break; // Break at first null
-			if (source_[i] == PORTION_DELIMITER)
-			{
-				source_[i] = 0; // Null terminator
-				portions_.push_back(source_ + (i + 1));
-			}
+			if (!source_ptr[i]) // If null
+				portions_.push_back(source_ptr + (i + 1));
 		}
-
-		if (source_[i]) // Ending isn't null
-			source_[i + 1] = 0; // Add null ending
 	}
 
 	package::package(const char* source_data)
@@ -44,8 +39,6 @@ namespace axp
 
 	package::~package()
 	{
-		std::lock_guard<std::mutex> lk(lock_);
-		delete source_;
 	}
 
 	size_t package::source_size()
@@ -55,10 +48,10 @@ namespace axp
 
 	const char* package::read_source()
 	{
-		return source_;
+		return source_.c_str();
 	}
 	
-	std::vector<char*>& package::source_portions()
+	std::vector<const char*>& package::source_portions()
 	{
 		return portions_;
 	}
@@ -89,11 +82,14 @@ namespace axp
 
 			if (buffer_size > sink_size)
 				buffer_size = sink_size;
+			else
+				--buffer_size;
 
 			std::copy(sink_ptr, (sink_ptr + buffer_size), output_buffer);
+			output_buffer[buffer_size] = '\0';
 
 			if (end_ptr)
-				*end_ptr = output_buffer + buffer_size;
+				*end_ptr = output_buffer + buffer_size + 1;
 
 			if (buffer_size == sink_size)
 				sink_.clear();

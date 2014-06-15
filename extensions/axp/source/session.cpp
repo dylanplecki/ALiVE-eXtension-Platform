@@ -98,14 +98,14 @@ namespace axp
 
 	void session::export_address(void* ptr_address, char* output_buffer)
 	{
-		sprintf(output_buffer, "%p", ptr_address);
+		sprintf(output_buffer, "\"%p\"", ptr_address);
 	}
 
 	char session::export_chunk(const char* chunk_addr_str, const size_t &output_size, char* output_buffer)
 	{
 		try
 		{
-			std::uintptr_t addr_dec(strtoul(chunk_addr_str, nullptr, 0));
+			std::uintptr_t addr_dec(strtoul(chunk_addr_str, nullptr, 16));
 			package* ref_package(reinterpret_cast<package*>(addr_dec));
 			
 			if (ref_package)
@@ -177,25 +177,26 @@ namespace axp
 
 	void session::process_input(const char* input_data, int output_size, char* output_buffer)
 	{
+		#define PREP_RETURN_STATUS ++output_buffer; --output_size
+
 		size_t input_size = strlen(input_data);
-		char* return_status = output_buffer;
-		++output_buffer;
-		--output_size;
 
 		if (input_size)
 		{
 			const char status = *input_data;
+			char* return_status = output_buffer;
 			++input_data;
 			boost::string_ref data_in(input_data);
 
 			switch (status)
 			{
 			case SF_NONE: // Check for new package in queue
+				PREP_RETURN_STATUS;
 				*return_status = export_next_package(output_size, output_buffer);
 				break;
 
 			case SF_CHUNK: // Get chunk from package storage (no return status)
-				export_chunk(input_data, output_size + 1, output_buffer - 1);
+				export_chunk(input_data, output_size, output_buffer);
 				break;
 
 			case SF_VERSION: // Get extension version information
@@ -210,28 +211,47 @@ namespace axp
 				strncpy(output_buffer, KEY_AUTH_MAIN, output_size);
 				break;
 
-			case SF_SYNC: case SF_ASYNC: // Run function from library
-				f_export lib_function = pull_lib_function(data_in);
-
-				if (lib_function)
+			case SF_TEST: // Create a package and return handle
+				PREP_RETURN_STATUS;
 				{
-					const bool async = (status == SF_ASYNC);
-					std::shared_ptr<package> func_package(new package(input_data));
-					handler func_handler(std::shared_ptr<session>(this), func_package, async);
-
-					if (async) // Asynchronous execution
-					{
-						func_handler.attach_thread(new std::thread(lib_function, func_handler));
-						*return_status = SF_HANDLE;
-						sprintf(output_buffer, "%p", func_package.get());
-					}
-					else // Synchronous execution
-					{
-						lib_function(func_handler);
-						*return_status = export_package(func_package, output_size, output_buffer);
-					}
+					std::shared_ptr<package> func_package(new package(""));
+					func_package->write_sink(input_data);
+					add_to_storage(func_package);
+					*return_status = SF_HANDLE;
+					export_address(func_package.get(), output_buffer);
 				}
 				break;
+
+			case SF_SYNC: case SF_ASYNC: // Run function from library
+				PREP_RETURN_STATUS;
+				{
+					f_export lib_function = pull_lib_function(data_in);
+
+					if (lib_function)
+					{
+						const bool async = (status == SF_ASYNC);
+						std::shared_ptr<package> func_package(new package(input_data));
+						handler func_handler(std::shared_ptr<session>(this), func_package, async);
+
+						if (async) // Asynchronous execution
+						{
+							func_handler.attach_thread(new std::thread(lib_function, func_handler));
+							*return_status = SF_HANDLE;
+							export_address(func_package.get(), output_buffer);
+						}
+						else // Synchronous execution
+						{
+							lib_function(func_handler);
+							*return_status = export_package(func_package, output_size, output_buffer);
+						}
+					}
+					else
+						*return_status = SF_ERROR;
+				}
+				break;
+			default:
+				PREP_RETURN_STATUS;
+				*return_status = SF_ERROR;
 			}
 		}
 	}

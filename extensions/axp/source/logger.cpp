@@ -14,6 +14,26 @@ namespace axp
 	{
 		logger_type global_logger(boost::log::keywords::severity = info);
 
+		std::ostream& operator<< (std::ostream& strm, severity_level level)
+		{
+			static const char* strings[] =
+			{
+				"trace",
+				"debug",
+				"info",
+				"warning",
+				"error",
+				"fatal"
+			};
+
+			if (static_cast< std::size_t >(level) < sizeof(strings) / sizeof(*strings))
+				strm << strings[level];
+			else
+				strm << static_cast< int >(level);
+
+			return strm;
+		}
+
 		void initialize(const char* log_file, const char* log_format, const severity_level &log_level)
 		{
 			boost::log::register_simple_formatter_factory<severity_level, char>("Severity");

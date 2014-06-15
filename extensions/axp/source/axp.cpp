@@ -2,9 +2,14 @@
 // Program Headers
 #include <axp/stdafx.h>
 #include <axp/axp.h>
+#include <axp/package.h>
 #include <axp/session.h>
 #include <axp/logger_boost.h>
 #include <axp/protocol_def.h>
+
+// STD Headers
+#include <iostream>
+#include <stdio.h>
 
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
@@ -86,20 +91,23 @@ namespace axp
 		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
 	}
 
-	void stop_current_session()
+	char stop_current_session()
 	{
-		if (!current_session)
+		if (current_session)
 		{
 			current_session.reset();
 			AXP_LOG_STREAM_SEV(info) << "Current native session stopped";
+			return SF_GOOD;
 		}
+		return SF_NONE;
 	}
 
-	void start_new_session()
+	char start_new_session()
 	{
 		stop_current_session();
 		current_session = std::shared_ptr<session>(new session);
 		AXP_LOG_STREAM_SEV(info) << "New native session started";
+		return SF_GOOD;
 	}
 }
 
@@ -107,7 +115,7 @@ namespace axp
 	#define EXPORT_CALL_TYPE __stdcall
 	extern "C"
 	{
-		__declspec(dllexport) void EXPORT_CALL_TYPE RVExtension(char *output, int outputSize, const char *function);
+		__declspec(dllexport) void EXPORT_CALL_TYPE RVExtension(char *output, int output_size, const char *function);
 	};
 #else
 	#define EXPORT_CALL_TYPE
@@ -118,25 +126,73 @@ void EXPORT_CALL_TYPE RVExtension(char *output, int output_size, const char *fun
 {
 	if (output_size > 0)
 	{
-		if (strlen(function) > 0)
+		// Process low-level status flags
+		switch (function[0])
 		{
-			// Process low-level status flags
-			switch (function[0])
+		case SF_NEW_SESSION:
+			output[0] = axp::start_new_session();
+			output[1] = '\0';
+			break;
+		case SF_DEL_SESSION:
+			output[0] = axp::stop_current_session();
+			output[1] = '\0';
+			break;
+		default:
+			if (output_size > 1)
 			{
-			case SF_NEW_SESSION:
-				axp::start_new_session();
-				break;
-			case SF_DEL_SESSION:
-				axp::stop_current_session();
-				break;
+				// Find current session and run
+				if (axp::current_session)
+					axp::current_session->process_input(function, (output_size - 2), output);
+
+				// Protect against buffer overflows
+				output[output_size - 1] = '\0';
 			}
 		}
+	}
+}
 
-		// Find current session and run
-		if (axp::current_session)
-			axp::current_session->process_input(function, (output_size - 2), output);
+// Standalone Operation System
+int main(int argc, const char* argv[])
+{
+	using namespace std;
+	const size_t input_buffer_size = 10240;
+	const size_t output_buffer_size = 10240;
 
-		// Protect against buffer overflows
-		output[output_size - 1] = '\0';
+	// Start a new session
+	axp::start_new_session();
+
+	while (true) {
+		unsigned int status_flag_int;
+
+		do {
+			cout << "Please enter a status flag [0,255]: ";
+			scanf("%u", &status_flag_int);
+			cout << '\n';
+		} while (status_flag_int <= 0 && status_flag_int > 255);
+
+		char input_buffer[input_buffer_size];
+		char output_buffer[output_buffer_size];
+
+		input_buffer[0] = static_cast<char>(status_flag_int);
+
+		cout << "Please enter a message to send (a tilde may be as a unit separator):" << "\n\n";
+		cin >> &(input_buffer[1]);
+
+		for (char &input_char : input_buffer)
+		{
+			if (input_char == '~')
+				input_char = PORTION_DELIMITER;
+		}
+
+		cout << "\n\n" << "Processing data..." << "\n\n";
+
+		RVExtension(output_buffer, output_buffer_size, input_buffer);
+
+		cout << "Output:\n\n";
+		cout << "    Length: " << strlen(output_buffer) << "\n\n";
+		cout << "    Status: " << static_cast<unsigned>(output_buffer[0]) << "\n\n";
+		cout << "\n\n" << output_buffer << "\n\n";
+		system("pause");
+		cout << "\n\n";
 	}
 }

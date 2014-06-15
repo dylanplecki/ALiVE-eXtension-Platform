@@ -26,7 +26,7 @@ namespace axp
 
 		size_t input_size();
 		const char* input_data();
-		std::vector<char*>& arguments();
+		std::vector<const char*>& arguments();
 
 		bool check_async();
 		bool active_session();

@@ -14,9 +14,9 @@ namespace axp
 	private:
 		std::mutex lock_;
 		std::string sink_;
-		char* source_;
+		std::string source_;
 		size_t source_size_;
-		std::vector<char*> portions_;
+		std::vector<const char*> portions_;
 
 		void init(const char* source_data, const size_t &copy_length);
 
@@ -27,7 +27,7 @@ namespace axp
 
 		size_t source_size();
 		const char* read_source();
-		std::vector<char*>& source_portions();
+		std::vector<const char*>& source_portions();
 		void write_sink(const char* input_data);
 		size_t sink_size();
 

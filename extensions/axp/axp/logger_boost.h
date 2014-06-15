@@ -5,6 +5,7 @@
 
 // Boost Headers
 #include <boost/log/core.hpp>
+#include <boost/log/attributes.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
