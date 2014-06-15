@@ -1,10 +1,10 @@
 
 // Program Headers
-#include <aep/stdafx.h>
-#include <aep/aep.h>
-#include <aep/session.h>
-#include <aep/logger_boost.h>
-#include <aep/protocol_def.h>
+#include <axp/stdafx.h>
+#include <axp/axp.h>
+#include <axp/session.h>
+#include <axp/logger_boost.h>
+#include <axp/protocol_def.h>
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -14,7 +14,7 @@
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
 
-namespace aep
+namespace axp
 {
 	std::shared_ptr<session> current_session;
 	std::string current_lib_path;
@@ -45,17 +45,17 @@ namespace aep
 		current_lib_path = lib_path();
 
 		// Initialize logger
-		logger::initialize((current_lib_path + AEP_LOG_FILE).c_str(), AEP_LOG_FORMAT, AEP_LOG_LEVEL);
+		logger::initialize((current_lib_path + axp_LOG_FILE).c_str(), axp_LOG_FORMAT, axp_LOG_LEVEL);
 
 		// Log standard information
-		AEP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Loaded";
-		AEP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path;
+		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Loaded";
+		AXP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path;
 	}
 
 	void lib_unload()
 	{
 		// Log standard information
-		AEP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
+		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
 	}
 
 	void stop_current_session()
@@ -63,7 +63,7 @@ namespace aep
 		if (!current_session)
 		{
 			current_session.reset();
-			AEP_LOG_STREAM_SEV(info) << "Current native session stopped";
+			AXP_LOG_STREAM_SEV(info) << "Current native session stopped";
 		}
 	}
 
@@ -71,7 +71,7 @@ namespace aep
 	{
 		stop_current_session();
 		current_session = std::shared_ptr<session>(new session);
-		AEP_LOG_STREAM_SEV(info) << "New native session started";
+		AXP_LOG_STREAM_SEV(info) << "New native session started";
 	}
 }
 
@@ -91,17 +91,17 @@ void __stdcall RVExtension(char *output, int output_size, const char *function)
 			switch (function[0])
 			{
 			case SF_NEW_SESSION:
-				aep::start_new_session();
+				axp::start_new_session();
 				break;
 			case SF_DEL_SESSION:
-				aep::stop_current_session();
+				axp::stop_current_session();
 				break;
 			}
 		}
 
 		// Find current session and run
-		if (aep::current_session)
-			aep::current_session->process_input(function, (output_size - 2), output);
+		if (axp::current_session)
+			axp::current_session->process_input(function, (output_size - 2), output);
 
 		// Protect against buffer overflows
 		output[output_size - 1] = '\0';

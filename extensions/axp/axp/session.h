@@ -1,7 +1,7 @@
 #pragma once
 
 // Program Headers
-#include <aep/library.h>
+#include <axp/library.h>
 
 // STD Headers
 #include <memory>
@@ -17,7 +17,7 @@
 #define DYNAMIC_LIBRARY_PATH "extensions\\"
 #define DYNAMIC_LIBRARY_EXT ".dll"
 
-namespace aep
+namespace axp
 {
 	class package; // Defined in <src/package.cpp>
 
@@ -34,7 +34,10 @@ namespace aep
 		std::unordered_map<std::string, std::shared_ptr<library>> loaded_lib_map_;
 
 		f_export pull_lib_function(boost::string_ref data_in);
-		char export_package(const std::shared_ptr<package> &output_package, const size_t &output_size, char* output_buffer);
+
+		void export_address(void* ptr_address, char* output_buffer);
+		char export_chunk(const char* chunk_addr_str, const size_t &output_size, char* output_buffer);
+		char export_package(const std::shared_ptr<package> &output_package, size_t output_size, char* output_buffer);
 		char export_next_package(const size_t &output_size, char* output_buffer);
 
 	public:

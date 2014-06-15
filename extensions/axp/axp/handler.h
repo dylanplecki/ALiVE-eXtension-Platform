@@ -1,7 +1,7 @@
 #pragma once
 
 // Program Headers
-#include <aep/logger.h>
+#include <axp/logger.h>
 
 // STD Headers
 #include <memory>
@@ -9,7 +9,7 @@
 #include <thread>
 #include <vector>
 
-namespace aep
+namespace axp
 {
 	class package; // Defined in <src/package.cpp>
 	class session; // Defined in <src/session.cpp>

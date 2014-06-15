@@ -1,15 +1,15 @@
 
 // Program Headers
-#include <aep/stdafx.h>
-#include <aep/handler.h>
-#include <aep/session.h>
-#include <aep/package.h>
-#include <aep/logger_boost.h>
+#include <axp/stdafx.h>
+#include <axp/handler.h>
+#include <axp/session.h>
+#include <axp/package.h>
+#include <axp/logger_boost.h>
 
 // STD Headers
 #include <mutex>
 
-#define AEP_HANDLER_LOG_MSG_WITH_PARAMS(logger, message, params_seq) \
+#define axp_HANDLER_LOG_MSG_WITH_PARAMS(logger, message, params_seq) \
 	boost::log::record rec = logger.open_record((BOOST_PP_SEQ_ENUM((boost::log::keywords::channel = "handlers")params_seq))); \
 	if (rec) \
 	{ \
@@ -19,12 +19,12 @@
 		logger.push_record(boost::move(rec)); \
 	}
 
-#define AEP_HANDLER_LOG_MSG(logger, message) \
-	AEP_HANDLER_LOG_MSG_WITH_PARAMS(logger, message,)
+#define axp_HANDLER_LOG_MSG(logger, message) \
+	axp_HANDLER_LOG_MSG_WITH_PARAMS(logger, message,)
 
-namespace aep
+namespace axp
 {
-	extern std::string current_lib_path; // Defined in <aep/aep.h>
+	extern std::string current_lib_path; // Defined in <axp/axp.h>
 
 	struct handler::internals
 	{
@@ -79,12 +79,12 @@ namespace aep
 
 	void handler::log(const char* message)
 	{
-		AEP_HANDLER_LOG_MSG(internals_->logger_, message);
+		axp_HANDLER_LOG_MSG(internals_->logger_, message);
 	}
 
 	void handler::log(const char* message, const logger::severity_level &severity)
 	{
-		AEP_HANDLER_LOG_MSG_WITH_PARAMS(internals_->logger_, message, (boost::log::keywords::severity = severity));
+		axp_HANDLER_LOG_MSG_WITH_PARAMS(internals_->logger_, message, (boost::log::keywords::severity = severity));
 	}
 
 	void handler::export_data(const char* output_data)

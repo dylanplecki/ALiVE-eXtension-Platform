@@ -1,16 +1,19 @@
 
 // Program Headers
-#include <aep/stdafx.h>
-#include <aep/session.h>
-#include <aep/package.h>
-#include <aep/handler.h>
-#include <aep/version.h>
-#include <aep/logger_boost.h>
-#include <aep/protocol_def.h>
+#include <axp/stdafx.h>
+#include <axp/session.h>
+#include <axp/package.h>
+#include <axp/handler.h>
+#include <axp/version.h>
+#include <axp/logger_boost.h>
+#include <axp/protocol_def.h>
 
-namespace aep
+// STD Headers
+#include <cstdint>
+
+namespace axp
 {
-	extern std::string current_lib_path; // Defined in <aep/aep.cpp>
+	extern std::string current_lib_path; // Defined in <axp/axp.cpp>
 
 	f_export session::pull_lib_function(boost::string_ref data_in)
 	{
@@ -55,10 +58,10 @@ namespace aep
 				switch (error_code)
 				{
 				case E_LIB_NOT_FOUND:
-					AEP_LOG_STREAM_SEV(error) << "Library '" << lib_name << "' not found at location '" << lib_path << "'";
+					AXP_LOG_STREAM_SEV(error) << "Library '" << lib_name << "' not found at location '" << lib_path << "'";
 					break;
 				case E_FUNC_NOT_FOUND:
-					AEP_LOG_STREAM_SEV(error) << "Requested function '" << func_name << "' not found in library '" << lib_name << "'";
+					AXP_LOG_STREAM_SEV(error) << "Requested function '" << func_name << "' not found in library '" << lib_name << "'";
 					break;
 				}
 			}
@@ -66,17 +69,50 @@ namespace aep
 		return nullptr;
 	}
 
-	char session::export_package(const std::shared_ptr<package> &output_package, const size_t &output_size, char* output_buffer)
+	void session::export_address(void* ptr_address, char* output_buffer)
 	{
+		sprintf(output_buffer, "%p", ptr_address);
+	}
+
+	char session::export_chunk(const char* chunk_addr_str, const size_t &output_size, char* output_buffer)
+	{
+		try
+		{
+			std::uintptr_t addr_dec(strtoul(chunk_addr_str, nullptr, 0));
+			package* ref_package(reinterpret_cast<package*>(addr_dec));
+			
+			if (ref_package->flush_sink(output_size, output_buffer, nullptr))
+				return SF_CHUNK; // More to pull
+			else
+			{
+				if (package_output_storage_.count(ref_package))
+					package_output_storage_.erase(ref_package);
+				return SF_GOOD; // Last part, EOF
+			}
+		}
+		catch (std::bad_cast& error)
+		{
+			AXP_LOG_STREAM_SEV(error) << "Bad cast from stringized pointer address to output data: " << error.what();
+			return SF_ERROR;
+		}
+	}
+
+	char session::export_package(const std::shared_ptr<package> &output_package, size_t output_size, char* output_buffer)
+	{
+		package* main_pkg_ptr = output_package.get();
+
 		if (output_package->sink_size() <= (size_t)output_size)
 		{
-			output_package->flush_sink(output_size, output_buffer);
+			output_package->flush_sink(output_size, output_buffer, nullptr);
+			if (package_output_storage_.count(main_pkg_ptr))
+				package_output_storage_.erase(main_pkg_ptr);
 			return SF_GOOD;
 		}
 		else
 		{
-			package_output_storage_[output_package.get()] = output_package;
-			sprintf(output_buffer, "%p", output_package.get());
+			if (!package_output_storage_.count(main_pkg_ptr))
+				package_output_storage_.emplace(main_pkg_ptr, output_package);
+			export_address(output_package.get(), output_buffer);
 			return SF_CHUNK;
 		}
 	}
@@ -84,12 +120,14 @@ namespace aep
 	char session::export_next_package(const size_t &output_size, char* output_buffer)
 	{
 		std::unique_lock<std::mutex> lock(queue_lock_);
+
 		if (package_output_queue_.size() > 0)
 		{
 			std::shared_ptr<package> output_package = package_output_queue_.front();
 			package_output_queue_.pop();
 			lock.unlock();
-			return export_package(output_package, output_size, output_buffer);
+			export_address(output_package.get(), output_buffer);
+			return SF_HANDLE;
 		}
 		return SF_NONE;
 	}
@@ -127,7 +165,7 @@ namespace aep
 				break;
 
 			case SF_CHUNK: // Get chunk from package storage
-				// TODO
+				*return_status = export_chunk(input_data, output_size, output_buffer);
 				break;
 
 			case SF_VERSION: // Get extension version information

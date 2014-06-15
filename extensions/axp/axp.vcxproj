@@ -13,8 +13,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FDD1ABA4-B975-4EC3-8DBF-EC35558E361D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>aep</RootNamespace>
-    <ProjectName>aep</ProjectName>
+    <RootNamespace>axp</RootNamespace>
+    <ProjectName>axp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -44,23 +44,23 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Configuration)\output\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Configuration)\output\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>aep/stdafx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -74,9 +74,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;USE_PCH;NDEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <PrecompiledHeaderFile>aep/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,20 +86,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="aep\handler.h" />
-    <ClInclude Include="aep\library.h" />
-    <ClInclude Include="aep\logger.h" />
-    <ClInclude Include="aep\logger_boost.h" />
-    <ClInclude Include="aep\package.h" />
-    <ClInclude Include="aep\protocol_def.h" />
-    <ClInclude Include="aep\resource.h" />
-    <ClInclude Include="aep\aep.h" />
-    <ClInclude Include="aep\session.h" />
-    <ClInclude Include="aep\stdafx.h" />
-    <ClInclude Include="aep\version.h" />
+    <ClInclude Include="axp\handler.h" />
+    <ClInclude Include="axp\library.h" />
+    <ClInclude Include="axp\logger.h" />
+    <ClInclude Include="axp\logger_boost.h" />
+    <ClInclude Include="axp\package.h" />
+    <ClInclude Include="axp\protocol_def.h" />
+    <ClInclude Include="axp\resource.h" />
+    <ClInclude Include="axp\axp.h" />
+    <ClInclude Include="axp\session.h" />
+    <ClInclude Include="axp\stdafx.h" />
+    <ClInclude Include="axp\version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\aep.cpp" />
+    <ClCompile Include="src\axp.cpp" />
     <ClCompile Include="src\dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -116,15 +116,15 @@
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">aep/stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">aep/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">axp/stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="aep.rc" />
+    <ResourceCompile Include="axp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="aep.aps" />
+    <None Include="axp.aps" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

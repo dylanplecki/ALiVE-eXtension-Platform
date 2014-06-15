@@ -1,7 +1,7 @@
 #pragma once
 
 // Program Headers
-#include <aep/logger.h>
+#include <axp/logger.h>
 
 // Boost Headers
 #include <boost/log/core.hpp>
@@ -9,16 +9,16 @@
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 
-#define AEP_LOG_STREAM_WITH_PARAMS(params_seq) \
-	BOOST_LOG_STREAM_WITH_PARAMS(aep::logger::global_logger, (boost::log::keywords::channel = "global")params_seq)
+#define AXP_LOG_STREAM_WITH_PARAMS(params_seq) \
+	BOOST_LOG_STREAM_WITH_PARAMS(axp::logger::global_logger, (boost::log::keywords::channel = "global")params_seq)
 
-#define AEP_LOG_STREAM \
-	AEP_LOG_STREAM_WITH_PARAMS()
+#define AXP_LOG_STREAM \
+	AXP_LOG_STREAM_WITH_PARAMS()
 
-#define AEP_LOG_STREAM_SEV(lvl) \
-	AEP_LOG_STREAM_WITH_PARAMS((boost::log::keywords::severity = aep::logger::lvl))
+#define AXP_LOG_STREAM_SEV(lvl) \
+	AXP_LOG_STREAM_WITH_PARAMS((boost::log::keywords::severity = axp::logger::lvl))
 
-namespace aep
+namespace axp
 {
 	namespace logger
 	{

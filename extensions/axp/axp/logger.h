@@ -1,6 +1,6 @@
 #pragma once
 
-namespace aep
+namespace axp
 {
 	namespace logger
 	{

@@ -4,11 +4,11 @@
 #include <memory>
 #include <string>
 
-#define AEP_LOG_FILE "log\aep_%Y-%m-%d_%H-%M-%S.log"
-#define AEP_LOG_LEVEL aep::logger::info
-#define AEP_LOG_FORMAT "[%TimeStamp%] <%Severity%> : %Message%"
+#define axp_LOG_FILE "log\axp_%Y-%m-%d_%H-%M-%S.log"
+#define axp_LOG_LEVEL axp::logger::info
+#define axp_LOG_FORMAT "[%TimeStamp%] <%Severity%> : %Message%"
 
-namespace aep
+namespace axp
 {
 	class session; // Defined in <src/session.cpp>
 

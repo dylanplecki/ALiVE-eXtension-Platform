@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace aep
+namespace axp
 {
 	class package
 	{
@@ -31,6 +31,6 @@ namespace aep
 		void write_sink(const char* input_data);
 		size_t sink_size();
 
-		size_t flush_sink(size_t buffer_size, char* output_buffer); // Returns characters left
+		size_t flush_sink(size_t buffer_size, char* output_buffer, char** end_ptr); // Returns characters left
 	};
 }

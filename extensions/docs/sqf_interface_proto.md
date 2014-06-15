@@ -15,7 +15,9 @@ Function Call:	"§library_name▼function_name▼argument▼list" (status SF_SYN
 	Return:		"§0x0000" || "§['sqf', 'return', 'value']" (status SF_HANDLE || SF_GOOD || SF_CHUNK || SF_ERROR)
 
 Chunked Call:	"§0x0000" (status SF_CHUNK)
-	Return:		"['sqf', 'return', 'value']" || ""
+	Return:		"'sqf', 'return', 'value'" || ""
+
+Note that a chunked call will not return brackets, while a normal function return call will.
 
 ## Protocol Specification (DEPRECATED)
 

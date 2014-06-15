@@ -14,7 +14,7 @@
 #define E_LIB_NOT_FOUND 0
 #define E_FUNC_NOT_FOUND 1
 
-namespace aep
+namespace axp
 {
 	class handler; // Defined in <src/handler.cpp>
 

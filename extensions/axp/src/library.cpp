@@ -1,9 +1,9 @@
 
 // Program Headers
-#include <aep/stdafx.h>
-#include <aep/library.h>
+#include <axp/stdafx.h>
+#include <axp/library.h>
 
-namespace aep
+namespace axp
 {
 	library::library(const char* lib_path) : lib_path_(lib_path)
 	{
