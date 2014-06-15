@@ -6,38 +6,76 @@
 // STD Headers
 #include <algorithm>
 
+// Boost Headers
+#include <boost/utility/string_ref.hpp>
+
 namespace aep
 {
-	package::package(const char* source_data) : source_(source_data), copy_(false)
+	void package::init(const char* source_data, const size_t &copy_length)
 	{
+		source_size_ = copy_length;
+		source_ = new char[copy_length + 1];
+		std::copy(source_data, (source_data + copy_length), source_);
+
+		size_t i = 0;
+		for (; i < copy_length; ++i)
+		{
+			if (!source_[i]) break; // Break at first null
+			if (source_[i] == PORTION_DELIMITER)
+			{
+				source_[i] = 0; // Null terminator
+				portions_.push_back(source_ + (i + 1));
+			}
+		}
+
+		if (source_[i]) // Ending isn't null
+			source_[i + 1] = 0; // Add null ending
 	}
 
-	package::package(const char* source_data, const size_t &source_size) : copy_(true)
+	package::package(const char* source_data)
 	{
-		std::copy(source_data, (source_data + source_size), source_copy_);
+		init(source_data, strlen(source_data));
+	}
+
+	package::package(const char* source_data, const size_t &copy_length)
+	{
+		init(source_data, copy_length);
 	}
 
 	package::~package()
 	{
 		std::lock_guard<std::mutex> lk(lock_);
-		if (source_)
-			delete source_;
-		if (source_copy_)
-			delete source_copy_;
+		delete source_;
+	}
+
+	size_t package::source_size()
+	{
+
 	}
 
 	const char* package::read_source()
 	{
-		if (copy_)
-			return source_copy_;
-		else
-			return source_;
+		return source_;
 	}
 	
+	std::vector<char*>& package::source_portions()
+	{
+		return portions_;
+	}
+
 	void package::write_sink(const char* input_data)
 	{
 		std::lock_guard<std::mutex> lk(lock_);
+
+		if (sink_.size()) // Comma-delimited sink
+			sink_.push_back(',');
+
 		sink_.append(input_data);
+	}
+
+	size_t package::sink_size()
+	{
+		return sink_.size();
 	}
 
 	size_t package::flush_sink(size_t buffer_size, char* output_buffer)

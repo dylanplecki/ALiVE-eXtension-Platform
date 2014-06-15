@@ -2,7 +2,22 @@
 SQF Interface Protocol
 ======================
 
-## Protocol Specification
+## New Protocol Specification
+
+Note that the symbol '§' denotes the status flag, while the symbol '▼' denotes the unit separator.
+
+### SQF Calls
+
+Session Call:	"§"	(status SF_NEW_SESSION || SF_DEL_SESSION)
+	Return:		"§" (status SF_GOOD || SF_NONE || SF_ERROR)
+
+Function Call:	"§library_name▼function_name▼argument▼list" (status SF_SYNC || SF_ASYNC)
+	Return:		"§0x0000" || "§['sqf', 'return', 'value']" (status SF_HANDLE || SF_GOOD || SF_CHUNK || SF_ERROR)
+
+Chunked Call:	"§0x0000" (status SF_CHUNK)
+	Return:		"['sqf', 'return', 'value']" || ""
+
+## Protocol Specification (DEPRECATED)
 
 	+-------------------------------------------+
 	| Byte		| Description					|

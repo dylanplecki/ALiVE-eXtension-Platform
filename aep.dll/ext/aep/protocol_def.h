@@ -18,3 +18,5 @@
 #define SF_HANDLE		7	// Return for asynchronous calls
 #define SF_NEW_SESSION	8	// Start a new native session
 #define SF_DEL_SESSION	9	// Stop the current native session
+#define SF_VERSION		10	// Get extension version information
+#define SF_COPY			11	// Copy input data to output buffer

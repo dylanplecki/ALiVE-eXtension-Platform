@@ -1,10 +1,9 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
-
-#define WIN32_LEAN_AND_MEAN
 
 // Program Headers
 #include <aep/stdafx.h>
 #include <aep/aep.h>
+
+#define WIN32_LEAN_AND_MEAN
 
 // Windows Headers
 #include <windows.h>

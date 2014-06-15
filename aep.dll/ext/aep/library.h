@@ -19,10 +19,10 @@ namespace aep
 	class handler; // Defined in <src/handler.cpp>
 
 	/*
-	Export function prototype:
-	void __declspec(dllexport) __stdcall MyExportedFunction(adp::handler* call_handler);
+		Export function prototype:
+			void __declspec(dllexport) __stdcall MyExportedFunction(const adp::handler &call_handler);
 	*/
-	typedef void(__stdcall *f_export)(handler*);
+	typedef void(__stdcall *f_export)(handler);
 	typedef std::unordered_map<std::string, f_export> function_lookup_list;
 
 	class library

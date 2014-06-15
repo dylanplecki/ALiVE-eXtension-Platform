@@ -74,7 +74,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PrecompiledHeaderFile>aep/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -92,10 +92,11 @@
     <ClInclude Include="aep\logger_boost.h" />
     <ClInclude Include="aep\package.h" />
     <ClInclude Include="aep\protocol_def.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="aep\resource.h" />
     <ClInclude Include="aep\aep.h" />
     <ClInclude Include="aep\session.h" />
     <ClInclude Include="aep\stdafx.h" />
+    <ClInclude Include="aep\version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aep.cpp" />

@@ -6,16 +6,18 @@
 #include <aep/logger_boost.h>
 #include <aep/protocol_def.h>
 
+#define WIN32_LEAN_AND_MEAN
+
+// Windows Headers
+#include <Windows.h>
+
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-
 
 namespace aep
 {
 	std::shared_ptr<session> current_session;
-	std::atomic<std::string> current_lib_path;
+	std::string current_lib_path;
 
 	std::string lib_path()
 	{
@@ -43,11 +45,11 @@ namespace aep
 		current_lib_path = lib_path();
 
 		// Initialize logger
-		logger::initialize((current_lib_path.load() + AEP_LOG_FILE).c_str(), AEP_LOG_FORMAT, AEP_LOG_LEVEL);
+		logger::initialize((current_lib_path + AEP_LOG_FILE).c_str(), AEP_LOG_FORMAT, AEP_LOG_LEVEL);
 
 		// Log standard information
 		AEP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Loaded";
-		AEP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path.load();
+		AEP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path;
 	}
 
 	void lib_unload()
@@ -79,25 +81,29 @@ extern "C"
 };
 
 // Export RVEngine extension function
-void __stdcall RVExtension(char *output, int outputSize, const char *function)
+void __stdcall RVExtension(char *output, int output_size, const char *function)
 {
-	--outputSize;
-
-	if (strlen(function) > 0)
+	if (output_size > 0)
 	{
-		// Process low-level status flags
-		switch (function[0])
+		if (strlen(function) > 0)
 		{
-		case SF_NEW_SESSION:
-			aep::start_new_session();
-			break;
-		case SF_DEL_SESSION:
-			aep::stop_current_session();
-			break;
+			// Process low-level status flags
+			switch (function[0])
+			{
+			case SF_NEW_SESSION:
+				aep::start_new_session();
+				break;
+			case SF_DEL_SESSION:
+				aep::stop_current_session();
+				break;
+			}
 		}
-	}
 
-	// Find current session and run
-	if (aep::current_session)
-		aep::current_session->process_input(function, outputSize, output);
+		// Find current session and run
+		if (aep::current_session)
+			aep::current_session->process_input(function, (output_size - 2), output);
+
+		// Protect against buffer overflows
+		output[output_size - 1] = '\0';
+	}
 }

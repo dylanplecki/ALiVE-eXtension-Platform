@@ -12,7 +12,7 @@ namespace aep
 {
 	namespace logger
 	{
-		logger_type global_logger(boost::log::keywords::severity = info, boost::log::keywords::channel = "global");
+		logger_type global_logger(boost::log::keywords::severity = info);
 
 		void initialize(const char* log_file, const char* log_format, const severity_level &log_level)
 		{
@@ -23,29 +23,9 @@ namespace aep
 				boost::log::keywords::auto_flush = true
 			);
 			boost::log::core::get()->set_filter(
-				severity >= log_level && channel == "global"
+				severity >= log_level
 			);
 			boost::log::add_common_attributes();
-		}
-
-		boost::log::record_ostream& global()
-		{
-			return boost::log::aux::make_record_pump(global_logger, global_logger.open_record()).stream();
-		}
-
-		boost::log::record_ostream& global(const severity_level &severity)
-		{
-			return boost::log::aux::make_record_pump(global_logger, global_logger.open_record()).stream();
-		}
-
-		void global(const char* message)
-		{
-			global() << message;
-		}
-
-		void global(const char* message, const severity_level &severity)
-		{
-			global(severity) << message;
 		}
 	}
 }

@@ -9,9 +9,14 @@
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 
-// Macros
-#define AEP_LOG_STREAM aep::logger::global()
-#define AEP_LOG_STREAM_SEV(lvl) aep::logger::global(aep::logger::lvl)
+#define AEP_LOG_STREAM_WITH_PARAMS(params_seq) \
+	BOOST_LOG_STREAM_WITH_PARAMS(aep::logger::global_logger, (boost::log::keywords::channel = "global")params_seq)
+
+#define AEP_LOG_STREAM \
+	AEP_LOG_STREAM_WITH_PARAMS()
+
+#define AEP_LOG_STREAM_SEV(lvl) \
+	AEP_LOG_STREAM_WITH_PARAMS((boost::log::keywords::severity = aep::logger::lvl))
 
 namespace aep
 {
@@ -24,7 +29,6 @@ namespace aep
 
 		extern logger_type global_logger;
 
-		boost::log::record_ostream& global();
-		boost::log::record_ostream& global(const severity_level &severity);
+		void initialize(const char* log_file, const char* log_format, const severity_level &log_level);
 	}
 }
