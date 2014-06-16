@@ -59,6 +59,7 @@ namespace axp
 		~session();
 
 		bool active();
+		void set_active(const bool &status);
 		void process_input(const char* input_data, int output_size, char* output_buffer);
 		void queue_output(const std::shared_ptr<package> &package_handle);
 	};

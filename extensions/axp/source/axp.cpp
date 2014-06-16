@@ -95,6 +95,7 @@ namespace axp
 	{
 		if (current_session)
 		{
+			current_session->set_active(false);
 			current_session.reset();
 			AXP_LOG_STREAM_SEV(info) << "Current native session stopped";
 			return SF_GOOD;
@@ -138,13 +139,14 @@ void EXPORT_CALL_TYPE RVExtension(char *output, int output_size, const char *fun
 			output[1] = '\0';
 			break;
 		default:
+			output[0] = '\0';
 			if (output_size > 1)
 			{
 				// Find current session and run
 				if (axp::current_session)
-					axp::current_session->process_input(function, (output_size - 2), output);
+					axp::current_session->process_input(function, (output_size - 1), output);
 
-				// Protect against buffer overflows
+				// Protect against non-null-termination
 				output[output_size - 1] = '\0';
 			}
 		}
