@@ -7,12 +7,17 @@ class cfgFunctions
 		{
 			file = "\x\alive\addons\sys_axp\functions";
 			
+			class axpExtHandler
+			{
+				preInit = 1;
+				ext = ".fsm";
+			};
+			
 			class axp {};
 			class axpCallExt {};
 			class axpCallExtWrapper {};
 			class axpGetExtOutput {};
 			class axpGetHandler {};
-			class axpHandlerHeader {};
 			class axpProcessExtOutput {};
 			class axpSetHandler {};
 		};

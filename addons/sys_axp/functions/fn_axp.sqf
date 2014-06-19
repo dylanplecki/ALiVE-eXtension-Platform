@@ -1,5 +1,6 @@
 #include "\x\alive\addons\sys_axp\headers\protocol_def.h"
 
+if (isNil "alive_axp" || {!alive_axp}) exitWith {nil};
 if (typeName(_this) != "ARRAY") then {_this = [_this]};
 
 private ["_library", "_function", "_arguments", "_async", "_handler"];
