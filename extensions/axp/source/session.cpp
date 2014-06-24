@@ -237,6 +237,7 @@ namespace axp
 						{ "Package Queue Count", std::to_string(package_output_queue_.size()) },
 						{ "Package Storage Count", std::to_string(package_output_storage_.size()) },
 						{ "Loaded Library Count", std::to_string(loaded_lib_map_.size()) },
+						{ "Working Directory", ('\"' + current_lib_path + '\"') },
 					};
 
 					for (auto ext_info_prop : ext_info_list)

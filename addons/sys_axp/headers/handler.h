@@ -31,8 +31,10 @@ namespace axp
 		bool check_async();
 		bool active_session();
 		const std::string& working_directory();
+
 		void log(const char* message);
 		void log(const char* message, const logger::severity_level &severity);
+
 		void export_data(const char* output_data);
 		void attach_thread(std::thread* new_thread);
 		void attach_thread(const std::shared_ptr<std::thread> &new_thread);

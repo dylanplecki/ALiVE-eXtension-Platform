@@ -18,7 +18,7 @@
 #if defined(_WIN32) || defined(_WIN64)
 	#define WIN32_LEAN_AND_MEAN
 	#include <Windows.h>
-	#define AXP_LOG_FILE "log\axp_%Y-%m-%d_%H-%M-%S.log"
+	#define AXP_LOG_FILE "log\\axp_%Y-%m-%d_%H-%M-%S.log"
 	#define LIB_LOAD_ATTR
 	#define LIB_UNLOAD_ATTR
 #elif defined(__linux)
@@ -54,8 +54,8 @@ namespace axp
 			}
 
 			GetModuleFileNameA(hm, path_buffer, sizeof(path_buffer));
-			boost::string_ref path(path_buffer);
-			return path.substr(0, path.find_last_of("\\") + 1).data();
+			std::string path(path_buffer);
+			return path.substr(0, path.find_last_of("\\") + 1);
 		#elif defined(__linux)
 			Dl_info* info_struct(new Dl_info);
 
@@ -87,6 +87,8 @@ namespace axp
 
 	LIB_UNLOAD_ATTR void lib_unload()
 	{
+		stop_current_session();
+
 		// Log standard information
 		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
 	}
@@ -160,7 +162,8 @@ int main(int argc, const char* argv[])
 	const size_t input_buffer_size = 10240;
 	const size_t output_buffer_size = 10240;
 
-	// Start a new session
+	// Initialize library
+	axp::lib_load();
 	axp::start_new_session();
 
 	while (true) {
@@ -197,4 +200,7 @@ int main(int argc, const char* argv[])
 		system("pause");
 		cout << "\n\n";
 	}
+
+	// Close library
+	axp::lib_unload();
 }
