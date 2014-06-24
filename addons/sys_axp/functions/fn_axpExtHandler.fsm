@@ -3,7 +3,7 @@
 /*
 item0[] = {"Start",0,250,-75.000000,-125.000000,25.000000,-75.000000,0.000000,"Start"};
 item1[] = {"Good_Version",4,218,-75.000000,-225.000000,25.000000,-175.000000,1.000000,"Good Version"};
-item2[] = {"No_Ext",8,218,75.000000,-125.000000,175.000000,-75.000000,0.000000,"No Ext"};
+item2[] = {"No_Ext",8,4314,75.000000,-125.000000,175.000000,-75.000000,0.000000,"No Ext"};
 item3[] = {"End",1,250,225.000000,-125.000000,325.000000,-75.000000,0.000000,"End"};
 item4[] = {"Init",2,250,-75.000000,-325.000000,25.000000,-275.000000,0.000000,"Init"};
 item5[] = {"Run_Handler",8,218,75.000000,-325.000000,175.000000,-275.000000,0.000000,"Run Handler"};
@@ -21,7 +21,7 @@ link7[] = {6,8};
 link8[] = {7,6};
 link9[] = {8,3};
 globals[] = {25.000000,1,0,0,0,640,480,1,11,6316128,1,-309.829651,656.150330,12.393188,-614.151123,1403,910,1};
-window[] = {2,-1,-1,-1,-1,967,208,1648,208,3,1421};
+window[] = {2,-1,-1,-1,-1,993,234,1674,234,3,1421};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -32,15 +32,10 @@ class FSM
     class Start
     {
       name = "Start";
-      init = /*%FSM<STATEINIT""">*/"#include ""\x\alive\addons\sys_axp\headers\protocol_def.h""" \n
-       "" \n
+      init = /*%FSM<STATEINIT""">*/"" \n
        "// Load global variables" \n
        "alive_axp = false;" \n
        "alive_axp_handlerdb = [[],[]];" \n
-       "" \n
-       "// Get version" \n
-       "private [""_version""];" \n
-       "_version = [SF_VERSION] call axpCallExtWrapper;" \n
        ""/*%FSM</STATEINIT""">*/;
       precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
       class Links
@@ -50,8 +45,11 @@ class FSM
         {
           priority = 1.000000;
           to="Init";
-          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-          condition=/*%FSM<CONDITION""">*/"(_version select 0) == SF_GOOD"/*%FSM</CONDITION""">*/;
+          precondition = /*%FSM<CONDPRECONDITION""">*/"" \n
+           "// Get version" \n
+           "private [""_version""];" \n
+           "_version = [10] call axpCallExtWrapper;"/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"(_version select 0) == 2"/*%FSM</CONDITION""">*/;
           action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
         };
         /*%FSM</LINK>*/
@@ -88,10 +86,10 @@ class FSM
        "alive_axp = true;" \n
        "" \n
        "// Add delete session handler" \n
-       "addMissionEventHandler [""Ended"",{[SF_DEL_SESSION] call axpCallExtWrapper}];" \n
+       "addMissionEventHandler [""Ended"",{[9] call axpCallExtWrapper}];" \n
        "" \n
        "// Start new session" \n
-       "[SF_NEW_SESSION] call axpCallExtWrapper;" \n
+       "[8] call axpCallExtWrapper;" \n
        ""/*%FSM</STATEINIT""">*/;
       precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
       class Links
@@ -127,7 +125,7 @@ class FSM
           to="End";
           precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
           condition=/*%FSM<CONDITION""">*/"!alive_axp"/*%FSM</CONDITION""">*/;
-          action=/*%FSM<ACTION""">*/"[SF_DEL_SESSION] call axpCallExtWrapper;"/*%FSM</ACTION""">*/;
+          action=/*%FSM<ACTION""">*/"[9] call axpCallExtWrapper;"/*%FSM</ACTION""">*/;
         };
         /*%FSM</LINK>*/
         /*%FSM<LINK "Reiterate">*/
