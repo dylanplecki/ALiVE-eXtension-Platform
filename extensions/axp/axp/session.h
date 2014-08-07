@@ -49,7 +49,7 @@ namespace axp
 		void remove_from_storage(package* package_ptr);
 		void remove_from_storage(const std::shared_ptr<package> &package_ref);
 
-		f_export pull_lib_function(boost::string_ref data_in);
+		f_export pull_lib_function(const char* &data_in, const size_t &len, const char* &end_ptr);
 
 		void export_address(void* ptr_address, char* output_buffer);
 		char export_chunk(const char* chunk_addr_str, const size_t &output_size, char* output_buffer);

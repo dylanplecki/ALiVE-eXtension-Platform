@@ -45,42 +45,47 @@ namespace axp
 	}
 
 
-	f_export session::pull_lib_function(boost::string_ref data_in)
+	f_export session::pull_lib_function(const char* &data_in, const size_t &len, const char* &end_ptr)
 	{
-		size_t delim_pos;
+		size_t cur_pos = 0;
+		size_t beg_pos = 0;
+		size_t counter = 0;
 		std::string lib_name;
 		std::string func_name;
-		unsigned char i = 0;
-
-		do {
-			delim_pos = data_in.find_first_of(31);
-			if (delim_pos == boost::string_ref::npos) break;
-			switch (i)
+		
+		for (; cur_pos < len && counter < 2; ++cur_pos)
+		{
+			if (data_in[cur_pos] == 31) // Unit Separator (UTF+001F &#31)
 			{
-			case 0:
-				lib_name = data_in.substr(0, delim_pos).data();
-				break;
-			case 1:
-				func_name = data_in.substr(0, delim_pos).data();
-				break;
-			}
-			++delim_pos;
-			if (data_in.size() > delim_pos)
-				data_in = data_in.substr(delim_pos, boost::string_ref::npos);
-			else
-				data_in.clear();
-			++i;
-		} while (delim_pos && i < 2);
+				switch (counter)
+				{
+				case 0:
+					lib_name.append(data_in + beg_pos, cur_pos - beg_pos);
+					break;
 
-		if (delim_pos != boost::string_ref::npos)
+				case 1:
+					func_name.append(data_in + beg_pos, cur_pos - beg_pos);
+					break;
+				}
+
+				beg_pos = cur_pos + 1;
+				++counter;
+			}
+		}
+
+		end_ptr = data_in + cur_pos;
+
+		if (lib_name.size() && func_name.size())
 		{
 			std::string lib_path(current_lib_path + DYNAMIC_LIBRARY_PATH + lib_name + DYNAMIC_LIBRARY_EXT);
 
 			try
 			{
 				std::lock_guard<std::mutex> lock(lib_lock_);
+
 				if (!loaded_lib_map_.count(lib_name))
 					loaded_lib_map_[lib_name] = std::shared_ptr<library>(new library(lib_path.c_str()));
+
 				return loaded_lib_map_[lib_name]->load_function(func_name.c_str());
 			}
 			catch (char error_code)
@@ -90,6 +95,7 @@ namespace axp
 				case E_LIB_NOT_FOUND:
 					AXP_LOG_STREAM_SEV(error) << "Library '" << lib_name << "' not found at location '" << lib_path << "'";
 					break;
+
 				case E_FUNC_NOT_FOUND:
 					AXP_LOG_STREAM_SEV(error) << "Requested function '" << func_name << "' not found in library '" << lib_name << "'";
 					break;
@@ -202,8 +208,6 @@ namespace axp
 
 		if (input_size)
 		{
-			boost::string_ref data_in(input_data);
-
 			switch (input_status)
 			{
 			case SF_NONE: // Check for new package in queue
@@ -257,12 +261,13 @@ namespace axp
 
 			case SF_SYNC: case SF_ASYNC: // Run function from library
 				{
-					f_export lib_function = pull_lib_function(data_in);
+					const char* arguments;
+					f_export lib_function = pull_lib_function(input_data, input_size, arguments);
 
 					if (lib_function)
 					{
 						const bool async = (input_status == SF_ASYNC);
-						std::shared_ptr<package> func_package(new package(input_data, strlen(input_data)));
+						std::shared_ptr<package> func_package(new package(arguments, strlen(arguments)));
 						handler func_handler(std::shared_ptr<session>(this), func_package, async);
 
 						if (async) // Asynchronous execution

@@ -129,11 +129,14 @@ namespace axp
 
 
 #if defined(_WIN32) || defined(_WIN64)
+	
 	#define EXPORT_CALL_TYPE __stdcall
+	
 	extern "C"
 	{
 		__declspec(dllexport) void EXPORT_CALL_TYPE RVExtension(char *output, int output_size, const char *function);
 	};
+
 #else
 	#define EXPORT_CALL_TYPE
 #endif
@@ -188,7 +191,7 @@ void EXPORT_CALL_TYPE RVExtension(char *output_buffer, int output_size, const ch
 			}
 		}
 
-		// Protect against non-null-termination
+		// Protect against buffer overflows
 		output_buffer[output_size - 1] = '\0';
 	}
 }
