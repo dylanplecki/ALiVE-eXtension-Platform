@@ -2,6 +2,7 @@
 
 // Program Headers
 #include <axp/logger.h>
+#include <axp/sqf_object.h>
 
 // STD Headers
 #include <memory>
@@ -25,8 +26,8 @@ namespace axp
 		~handler();
 
 		size_t input_size();
-		const char* input_data();
-		std::vector<const char*>& arguments();
+		const char* input_source();
+		const sqf::variable& input_data();
 
 		bool check_async();
 		bool active_session();
@@ -36,6 +37,8 @@ namespace axp
 		void log(const char* message, const logger::severity_level &severity);
 
 		void export_data(const char* output_data);
+		void export_data(const sqf::variable& output_data);
+
 		void attach_thread(std::thread* new_thread);
 		void attach_thread(const std::shared_ptr<std::thread> &new_thread);
 	};

@@ -1,19 +1,18 @@
 
 // Program Headers
 #include <axp/stdafx.h>
+#include <axp/axp.h>
 #include <axp/session.h>
 #include <axp/package.h>
 #include <axp/handler.h>
-#include <axp/version.h>
 #include <axp/logger_boost.h>
 #include <axp/protocol_def.h>
 
-// Key Files
-#include <keys/auth.key>
 
 namespace axp
 {
 	extern std::string current_lib_path; // Defined in <axp/axp.cpp>
+
 
 	void session::add_to_storage(const std::shared_ptr<package> &package_ref)
 	{
@@ -24,6 +23,7 @@ namespace axp
 			package_output_storage_.emplace(package_ptr_int, package_ref);
 	}
 
+
 	void session::remove_from_storage(const std::uintptr_t &package_ptr_int)
 	{
 		std::lock_guard<std::mutex> lock(storage_lock_);
@@ -32,15 +32,18 @@ namespace axp
 			package_output_storage_.erase(package_ptr_int);
 	}
 
+
 	void session::remove_from_storage(package* package_ptr)
 	{
 		remove_from_storage(reinterpret_cast<std::uintptr_t>(package_ptr));
 	}
 
+
 	void session::remove_from_storage(const std::shared_ptr<package> &package_ref)
 	{
 		remove_from_storage(package_ref.get());
 	}
+
 
 	f_export session::pull_lib_function(boost::string_ref data_in)
 	{
@@ -96,10 +99,12 @@ namespace axp
 		return nullptr;
 	}
 
+
 	void session::export_address(void* ptr_address, char* output_buffer)
 	{
 		sprintf(output_buffer, "\"%p\"", ptr_address);
 	}
+
 
 	char session::export_chunk(const char* chunk_addr_str, const size_t &output_size, char* output_buffer)
 	{
@@ -111,12 +116,18 @@ namespace axp
 			if (package_output_storage_.at(addr_dec)->flush_sink(output_size, output_buffer, nullptr))
 				return SF_CHUNK; // More to pull
 			else
-				remove_from_storage(addr_dec);
+			{
+				// Remove from storage container
+				if (package_output_storage_.count(addr_dec))
+					package_output_storage_.erase(addr_dec);
+			}
+
 			return SF_GOOD;
 		}
 
 		return SF_NONE;
 	}
+
 
 	char session::export_package(const std::shared_ptr<package> &output_package, size_t output_size, char* output_buffer)
 	{
@@ -134,6 +145,7 @@ namespace axp
 		}
 	}
 
+
 	char session::export_next_package(const size_t &output_size, char* output_buffer)
 	{
 		std::unique_lock<std::mutex> lock(queue_lock_);
@@ -150,81 +162,65 @@ namespace axp
 		return SF_NONE;
 	}
 
+
 	session::session() : active_(true)
 	{
 	}
 
+
 	session::~session()
 	{
 	}
+
 
 	bool session::active()
 	{
 		return active_;
 	}
 
+
 	void session::set_active(const bool &status)
 	{
 		active_ = status;
 	}
 
-	void session::process_input(const char* input_data, int output_size, char* output_buffer)
+
+	void session::queue_output(const std::shared_ptr<package> &package_handle)
+	{
+		std::lock_guard<std::mutex> lock(queue_lock_);
+		package_output_queue_.push(package_handle);
+	}
+
+
+	void session::process_input(const char &input_status, const char* input_data, char &output_status, int output_size, char* output_buffer)
 	{
 		// Macros
-		#define SHED_RETURN_STATUS return_status = nullptr; --output_buffer; ++output_size
-		#define OUTPUT_STRING(value) \
-			{ \
-				std::string temp_record; \
-				temp_record.push_back('\"'); \
-				temp_record.append(value); \
-				temp_record.push_back('\"'); \
-				strncpy(output_buffer, temp_record.c_str(), output_size); \
-			}
+		#define SHED_OUTPUT_STATUS --output_buffer; ++output_size // Unsafe method for accessing full output buffer
 
 		// Code
-		size_t input_size = strlen(input_data);
+		size_t input_size = strlen(input_data) + 1;
 
 		if (input_size)
 		{
-			const char status = *input_data;
-			char* return_status = output_buffer;
-			++output_buffer;
-			--output_size;
-			++input_data;
 			boost::string_ref data_in(input_data);
 
-			switch (status)
+			switch (input_status)
 			{
 			case SF_NONE: // Check for new package in queue
-				*return_status = export_next_package(output_size, output_buffer);
+				output_status = export_next_package(output_size, output_buffer);
 				break;
 
 			case SF_CHUNK: // Get chunk from package storage (no return status)
-				SHED_RETURN_STATUS;
+				SHED_OUTPUT_STATUS;
 				export_chunk(input_data, output_size, output_buffer);
-				break;
-
-			case SF_VERSION: // Get extension version information
-				OUTPUT_STRING(INF_FILE_VERSION_STR);
-				*return_status = SF_GOOD;
-				break;
-
-			case SF_COPY: // Copy input data to output buffer
-				strncpy(output_buffer, input_data, output_size);
-				*return_status = SF_GOOD;
-				break;
-
-			case SF_AUTH: // Get extension authorization key
-				OUTPUT_STRING(KEY_AUTH_MAIN);
-				*return_status = SF_GOOD;
 				break;
 
 			case SF_TEST: // Create a package and return handle
 				{
-					std::shared_ptr<package> func_package(new package(""));
+					std::shared_ptr<package> func_package(new package(input_data, input_size));
 					func_package->write_sink(input_data);
 					add_to_storage(func_package);
-					*return_status = SF_HANDLE;
+					output_status = SF_HANDLE;
 					export_address(func_package.get(), output_buffer);
 				}
 				break;
@@ -256,7 +252,7 @@ namespace axp
 
 					strncpy(output_buffer, ext_info.c_str(), output_size);
 				}
-				*return_status = SF_GOOD;
+				output_status = SF_GOOD;
 				break;
 
 			case SF_SYNC: case SF_ASYNC: // Run function from library
@@ -265,41 +261,36 @@ namespace axp
 
 					if (lib_function)
 					{
-						const bool async = (status == SF_ASYNC);
-						std::shared_ptr<package> func_package(new package(input_data));
+						const bool async = (input_status == SF_ASYNC);
+						std::shared_ptr<package> func_package(new package(input_data, strlen(input_data)));
 						handler func_handler(std::shared_ptr<session>(this), func_package, async);
 
 						if (async) // Asynchronous execution
 						{
 							func_handler.attach_thread(new std::thread(lib_function, func_handler));
-							*return_status = SF_HANDLE;
+							output_status = SF_HANDLE;
 							export_address(func_package.get(), output_buffer);
 						}
 						else // Synchronous execution
 						{
 							lib_function(func_handler);
-							*return_status = export_package(func_package, output_size, output_buffer);
+							output_status = export_package(func_package, output_size, output_buffer);
 						}
 					}
 					else
 					{
 						OUTPUT_STRING("Could't load the associated function or library: " + std::string(input_data));
-						*return_status = SF_ERROR;
+						output_status = SF_ERROR;
 					}
 				}
 				break;
+
 			default:
-				const std::string error_message = "Could't find action associated with status flag: " + std::to_string(status);
+				const std::string error_message = "Could't find action associated with status flag: " + std::to_string(input_status);
 				AXP_LOG_STREAM_SEV(warning) << error_message;
 				OUTPUT_STRING(error_message);
-				*return_status = SF_ERROR;
+				output_status = SF_ERROR;
 			}
 		}
-	}
-
-	void session::queue_output(const std::shared_ptr<package> &package_handle)
-	{
-		std::lock_guard<std::mutex> lock(queue_lock_);
-		package_output_queue_.push(package_handle);
 	}
 }

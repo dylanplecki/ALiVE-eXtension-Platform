@@ -9,9 +9,9 @@ _status = _inputArr select 0;
 _inputArr set [0, 32]; // 32 == space
 _return = call compile toString(_inputArr);
 
-if (_status == 3)
+if (_status == 3) then
 {
 	diag_log text format["[%1] AXP <ERROR>: %2", round(diag_tickTime), _return];
 };
 
-[_status, _return] // Return
+[_status, (if (isNil "_return") then {nil} else {_return})] // Return

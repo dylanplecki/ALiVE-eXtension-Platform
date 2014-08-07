@@ -132,6 +132,7 @@
     <ClInclude Include="axp\stdafx.h" />
     <ClInclude Include="axp\version.h" />
     <ClInclude Include="keys\auth.h" />
+    <ClInclude Include="axp\sqf_object.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\axp.cpp" />
@@ -159,6 +160,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Console|Win32'">axp/stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="source\sqf_object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="axp.rc" />

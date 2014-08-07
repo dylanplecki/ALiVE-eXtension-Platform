@@ -9,52 +9,42 @@
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
 
+
 namespace axp
 {
-	void package::init(const char* source_data, const size_t &copy_length)
+	package::package(const char* source_data, const size_t &copy_length) : source_size_(copy_length), source_(source_data, copy_length), sqf_data_(source_)
 	{
-		source_size_ = copy_length;
-		source_.append(source_data, copy_length);
-		source_.replace(source_.begin(), source_.end(), PORTION_DELIMITER, 0);
-		
-		const char* source_ptr = source_.c_str();
-		size_t source_len = source_.length() - 1;
-
-		for (size_t i = 0; i < source_len; ++i)
-		{
-			if (!source_ptr[i]) // If null
-				portions_.push_back(source_ptr + (i + 1));
-		}
 	}
 
-	package::package(const char* source_data)
-	{
-		init(source_data, strlen(source_data));
-	}
-
-	package::package(const char* source_data, const size_t &copy_length)
-	{
-		init(source_data, copy_length);
-	}
 
 	package::~package()
 	{
 	}
 
-	size_t package::source_size()
+
+	size_t package::source_size() const
 	{
 		return source_size_;
 	}
 
-	const char* package::read_source()
+
+	const char* package::read_source() const
 	{
 		return source_.c_str();
 	}
-	
-	std::vector<const char*>& package::source_portions()
+
+
+	const sqf::variable& package::sqf_data() const
 	{
-		return portions_;
+		return sqf_data_;
 	}
+
+
+	size_t package::sink_size() const
+	{
+		return sink_.size();
+	}
+
 
 	void package::write_sink(const char* input_data)
 	{
@@ -66,10 +56,6 @@ namespace axp
 		sink_.append(input_data);
 	}
 
-	size_t package::sink_size()
-	{
-		return sink_.size();
-	}
 
 	size_t package::flush_sink(size_t buffer_size, char* output_buffer, char** end_ptr)
 	{

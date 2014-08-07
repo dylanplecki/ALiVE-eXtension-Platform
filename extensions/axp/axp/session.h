@@ -60,7 +60,7 @@ namespace axp
 
 		bool active();
 		void set_active(const bool &status);
-		void process_input(const char* input_data, int output_size, char* output_buffer);
 		void queue_output(const std::shared_ptr<package> &package_handle);
+		void process_input(const char &input_status, const char* input_data, char &output_status, int output_size, char* output_buffer);
 	};
 }

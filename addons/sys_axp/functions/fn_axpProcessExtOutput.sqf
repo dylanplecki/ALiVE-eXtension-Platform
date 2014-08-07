@@ -9,7 +9,7 @@ for "_i" from 0 to 1 step 0 do // For performance
 	private ["_handler"];
 	_handler = [_newPackage select 1] call alive_fnc_axpGetHandler;
 	
-	if (!isNil "_handler")
+	if (!isNil "_handler") then
 	{
 		([_newPackage select 1] call alive_fnc_axpGetExtOutput) call _handler;
 	};

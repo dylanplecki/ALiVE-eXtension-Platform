@@ -2,7 +2,25 @@
 SQF Interface Protocol
 ======================
 
-## New Protocol Specification
+## New Protocol Specification III
+
+Note that the symbol '§' denotes the status flag, '▼' denotes the unit separator, and '•' denotes the SQF data type flag.
+The two flags can hold 255 descrete values each, excluding the null character (0x00).
+
+### All Interface Communications
+
+SQF -> C++ : "§•data"
+C++ -> SQF : "§data"
+
+Notes:
+ - The chunked/data return interface specification doesn't require a return status flag (C++ -> SQF) for performance reasons.
+ - Return data (C++ -> SQF) must *always* be in an SQF compilable format.
+ - Entry data arrays (SQF -> C++) are handled in the following format: "••data_1▼•data_2▼•data_3¶", where the '¶' character
+   is the array boundary indicator (0x1E | 30), and where the first SQF data type flag identifies the array.
+
+-------------------------------------------------
+
+## Protocol Specification II (DEPRECATED)
 
 Note that the symbol '§' denotes the status flag, while the symbol '▼' denotes the unit separator.
 
@@ -19,7 +37,9 @@ Chunked Call:	"§0x0000" (status SF_CHUNK)
 
 Note that a chunked call will not return brackets, while a normal function return call will.
 
-## Protocol Specification (DEPRECATED)
+-------------------------------------------------
+
+## Protocol Specification I (DEPRECATED)
 
 	+-------------------------------------------+
 	| Byte		| Description					|

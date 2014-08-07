@@ -1,6 +1,7 @@
 #pragma once
 
-#define PORTION_DELIMITER 31 // Unit separator (UTF+001F &#31)
+// Program Headers
+#include <axp\sqf_object.h>
 
 // STD Headers
 #include <mutex>
@@ -16,21 +17,19 @@ namespace axp
 		std::string sink_;
 		std::string source_;
 		size_t source_size_;
-		std::vector<const char*> portions_;
-
-		void init(const char* source_data, const size_t &copy_length);
+		sqf::variable sqf_data_;
 
 	public:
-		package(const char* source_data);
 		package(const char* source_data, const size_t &copy_length);
 		~package();
 
-		size_t source_size();
-		const char* read_source();
-		std::vector<const char*>& source_portions();
-		void write_sink(const char* input_data);
-		size_t sink_size();
+		size_t source_size() const;
+		const char* read_source() const;
 
+		const sqf::variable& sqf_data() const;
+
+		size_t sink_size() const;
+		void write_sink(const char* input_data);
 		size_t flush_sink(size_t buffer_size, char* output_buffer, char** end_ptr); // Returns characters left
 	};
 }

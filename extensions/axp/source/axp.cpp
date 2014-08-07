@@ -5,6 +5,7 @@
 #include <axp/package.h>
 #include <axp/session.h>
 #include <axp/logger_boost.h>
+#include <axp/version.h>
 #include <axp/protocol_def.h>
 
 // STD Headers
@@ -13,6 +14,7 @@
 
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
+
 
 // OS-Dependent Headers
 #if defined(_WIN32) || defined(_WIN64)
@@ -29,13 +31,16 @@
 	#error Cannot load log file path: OS not supported
 #endif
 
+// General Headers
 #define AXP_LOG_LEVEL axp::logger::info
 #define AXP_LOG_FORMAT "[%TimeStamp%] <%Severity%> : %Message%"
+
 
 namespace axp
 {
 	std::shared_ptr<session> current_session;
 	std::string current_lib_path;
+
 
 	std::string lib_path()
 	{
@@ -72,6 +77,7 @@ namespace axp
 		#endif
 	}
 
+
 	LIB_LOAD_ATTR void lib_load()
 	{
 		// Initialize library path variable
@@ -85,6 +91,7 @@ namespace axp
 		AXP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path;
 	}
 
+
 	LIB_UNLOAD_ATTR void lib_unload()
 	{
 		stop_current_session();
@@ -92,6 +99,7 @@ namespace axp
 		// Log standard information
 		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
 	}
+
 
 	char stop_current_session()
 	{
@@ -105,6 +113,7 @@ namespace axp
 		return SF_NONE;
 	}
 
+
 	char start_new_session()
 	{
 		stop_current_session();
@@ -113,6 +122,7 @@ namespace axp
 		return SF_GOOD;
 	}
 }
+
 
 #if defined(_WIN32) || defined(_WIN64)
 	#define EXPORT_CALL_TYPE __stdcall
@@ -124,42 +134,66 @@ namespace axp
 	#define EXPORT_CALL_TYPE
 #endif
 
+
 // Export RVEngine extension function
-void EXPORT_CALL_TYPE RVExtension(char *output, int output_size, const char *function)
+void EXPORT_CALL_TYPE RVExtension(char *output_buffer, int output_size, const char *input_data)
 {
 	if (output_size > 0)
 	{
+		const char input_status = input_data[0];
+		char* output_status = output_buffer;
+
+		++output_buffer;
+		--output_size;
+		++input_data;
+
+		*output_status = SF_NONE;
+		output_buffer[0] = '\0';
+
 		// Process low-level status flags
-		switch (function[0])
+		switch (input_status)
 		{
-		case SF_NEW_SESSION:
-			output[0] = axp::start_new_session();
-			output[1] = '\0';
+		case SF_NEW_SESSION: // Start a new native session
+			*output_status = axp::start_new_session();
 			break;
-		case SF_DEL_SESSION:
-			output[0] = axp::stop_current_session();
-			output[1] = '\0';
+
+		case SF_DEL_SESSION: // Stop the current native session
+			*output_status = axp::stop_current_session();
 			break;
-		default:
-			output[0] = '\0';
+
+		case SF_VERSION: // Get extension version information
+			OUTPUT_STRING(INF_FILE_VERSION_STR);
+			*output_status = SF_GOOD;
+			break;
+
+		case SF_COPY: // Copy input data to output buffer
+			strncpy(output_buffer, input_data, output_size);
+			*output_status = SF_GOOD;
+			break;
+
+		case SF_AUTH: // Get extension authorization key
+			OUTPUT_STRING(KEY_AUTH_MAIN);
+			*output_status = SF_GOOD;
+			break;
+
+		default: // Find current session and run
 			if (output_size > 1)
 			{
-				// Find current session and run
 				if (axp::current_session)
-					axp::current_session->process_input(function, (output_size - 1), output);
-
-				// Protect against non-null-termination
-				output[output_size - 1] = '\0';
+					axp::current_session->process_input(input_status, input_data, *output_status, output_size, output_buffer);
 			}
 		}
+
+		// Protect against non-null-termination
+		output_buffer[output_size - 1] = '\0';
 	}
 }
+
 
 // Standalone Operation System
 int main(int argc, const char* argv[])
 {
 	using namespace std;
-	const size_t input_buffer_size = 10240;
 	const size_t output_buffer_size = 10240;
 
 	// Initialize library
@@ -167,38 +201,72 @@ int main(int argc, const char* argv[])
 	axp::start_new_session();
 
 	while (true) {
-		unsigned int status_flag_int;
+		cout << "\n\n";
 
-		do {
-			cout << "Please enter a status flag [0,255]: ";
-			scanf("%u", &status_flag_int);
-			cout << '\n';
-		} while (status_flag_int <= 0 && status_flag_int > 255);
-
-		char input_buffer[input_buffer_size];
+		string input_data("");
 		char output_buffer[output_buffer_size];
 
-		input_buffer[0] = static_cast<char>(status_flag_int);
+		char status_code;
+		cout << "Status Code [0,255]: ";
+		scanf("%hhu", &status_code);
+		cout << "\n\n";
 
-		cout << "Please enter a message to send (a tilde may be as a unit separator):" << "\n\n";
-		cin >> &(input_buffer[1]);
+		input_data.push_back(status_code);
 
-		for (char &input_char : input_buffer)
+		std::string enter_type;
+		cout << "Enter SQF [V]ariable(s), Raw [D]ata, or [N]othing? [v/d/n]: ";
+		cin >> enter_type;
+		cout << "\n\n";
+
+		switch (enter_type[0])
 		{
-			if (input_char == '~')
-				input_char = PORTION_DELIMITER;
+		case 'v':
+			{
+				string var_status;
+				do {
+					char sqf_var_type;
+					cout << "SQF Variable Type [0,255]: ";
+					scanf("%hhu", &sqf_var_type);
+					cout << "\n";
+
+					string sqf_var_data;
+					cout << "Enter Variable Data:\n\n";
+					cin >> sqf_var_data;
+					cout << "\n---\n\n";
+
+					input_data.push_back(sqf_var_type);
+					input_data.append(sqf_var_data);
+
+					cout << "Add another SQF Variable? [y/n]: ";
+					cin >> var_status;
+					cout << "\n\n---\n\n";
+				} while (tolower(var_status[0]) == 'y');
+			}
+			break;
+
+		case 'd':
+			{
+				string raw_data;
+				cout << "Enter Raw Data:\n\n";
+				cin >> raw_data;
+				cout << "\n---\n\n";
+				input_data.append(raw_data);
+			}
+			break;
 		}
 
-		cout << "\n\n" << "Processing data..." << "\n\n";
+		cout << "Input Data: " << input_data << "\n\n";
+		cout << "Processing...\n\n";
 
-		RVExtension(output_buffer, output_buffer_size, input_buffer);
+		RVExtension(output_buffer, output_buffer_size, input_data.c_str());
 
-		cout << "Output:\n\n";
-		cout << "    Length: " << strlen(output_buffer) << "\n\n";
-		cout << "    Status: " << static_cast<unsigned>(output_buffer[0]) << "\n\n";
+		cout << "Output:\n";
+		cout << "    Length: " << strlen(output_buffer) << "\n";
+		cout << "    Status: " << std::to_string(output_buffer[0]) << "\n";
 		cout << "\n\n" << output_buffer << "\n\n";
+
 		system("pause");
-		cout << "\n\n";
+		cout << "\n\n-------------------------------------------------\n";
 	}
 
 	// Close library

@@ -18,8 +18,12 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	case DLL_PROCESS_ATTACH:
 		axp::lib_load();
 		break;
-	case DLL_THREAD_ATTACH: // Do nothing
-	case DLL_THREAD_DETACH: // Do nothing
+	case DLL_THREAD_ATTACH:
+		// Do nothing
+		break;
+	case DLL_THREAD_DETACH:
+		// Do nothing
+		break;
 	case DLL_PROCESS_DETACH:
 		axp::lib_unload();
 		break;
