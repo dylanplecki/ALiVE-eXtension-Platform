@@ -99,7 +99,7 @@ namespace axp
 			else
 			{
 				str_data = new std::string(parse_string);
-				type_ = static_cast<data_type>((*str_data)[0] - 1);
+				type_ = static_cast<data_type>(str_data->at(0) - 1);
 				str_data->erase(0, 1); // TODO: Consider revising for performance?
 			}
 
@@ -109,26 +109,30 @@ namespace axp
 				{
 					std::vector<sqf::variable> var_array = *(new std::vector<sqf::variable>);
 
-					// Record Separator (UTF+001E &#30) or Unit Separator (UTF+001F &#31)
-
 					const size_t fin_pos = str_data->find_last_of(30);
-					size_t cur_pos = 0;
-					size_t end_pos = 1;
-					size_t a_delim;
+					size_t scope_counter = 0;
+					size_t last_pos = 0;
 
-					while (end_pos < fin_pos) {
-						if ((*str_data)[cur_pos] == array)
-							a_delim = 30;
-						else
-							a_delim = 31;
+					for (size_t cur_pos = 0; cur_pos < fin_pos; ++cur_pos)
+					{
+						switch (str_data->at(cur_pos))
+						{
+						case (array + 1): // Array Data Type (UTF+0001 &#1) [Array initiator]
+							++scope_counter;
+							break;
 
-						end_pos = str_data->find(a_delim, cur_pos);
+						case 30: // Record Separator (UTF+001E &#30) [Array boundary]
+							--scope_counter;
+							break;
 
-						if (end_pos == std::string::npos)
-							end_pos = fin_pos;
-
-						var_array.emplace_back(str_data->substr(cur_pos, end_pos - cur_pos));
-						cur_pos = end_pos + 1;
+						case 31: // Unit Separator (UTF+001F &#31) [Element delimiter]
+							if (!scope_counter)
+							{
+								var_array.emplace_back(str_data->substr(last_pos, cur_pos));
+								last_pos = cur_pos + 1;
+							}
+							break;
+						}
 					}
 
 					data_ = &var_array;
@@ -138,7 +142,7 @@ namespace axp
 				break;
 
 			case boolean:
-				data_ = new bool(((*str_data)[0] != '0') && (*str_data != "false"));
+				data_ = new bool((str_data->at(0) != '0') && (*str_data != "false"));
 				delete str_data;
 				break;
 
