@@ -44,7 +44,7 @@ namespace axp
 			variable();
 			variable(const data_type &data_type);
 			variable(const variable &ref_object);
-			variable(const std::string &parse_string);
+			variable(const std::string &parse_string); // passed data_type is index+1
 			variable(const data_type &type, void* value);
 			~variable();
 

@@ -45,6 +45,7 @@ namespace axp
 	std::string lib_path()
 	{
 		#if defined(_WIN32) || defined(_WIN64)
+			
 			char path_buffer[MAX_PATH];
 			HMODULE hm = NULL;
 
@@ -61,7 +62,9 @@ namespace axp
 			GetModuleFileNameA(hm, path_buffer, sizeof(path_buffer));
 			std::string path(path_buffer);
 			return path.substr(0, path.find_last_of("\\") + 1);
+
 		#elif defined(__linux)
+			
 			Dl_info* info_struct(new Dl_info);
 
 			if (!dladdr(&lib_path, info_struct))
@@ -72,6 +75,7 @@ namespace axp
 
 			boost::string_ref path(info_struct.dli_fname);
 			return path.substr(0, path.find_last_of("/") + 1).data();
+
 		#else
 			#error Cannot preprocess function 'axp::lib_path': OS not supported
 		#endif
@@ -87,8 +91,8 @@ namespace axp
 		logger::initialize((current_lib_path + AXP_LOG_FILE).c_str(), AXP_LOG_FORMAT, AXP_LOG_LEVEL);
 
 		// Log standard information
-		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Loaded";
-		AXP_LOG_STREAM_SEV(info) << "Working Directory: " << current_lib_path;
+		AXP_LOG_STREAM_SEV(info) << "ALiVE eXtension Platform (AXP) loaded";
+		AXP_LOG_STREAM_SEV(info) << "Working directory: " << current_lib_path;
 	}
 
 
@@ -97,7 +101,7 @@ namespace axp
 		stop_current_session();
 
 		// Log standard information
-		AXP_LOG_STREAM_SEV(info) << "ALiVE Data Plugin (ADP) Unloaded";
+		AXP_LOG_STREAM_SEV(info) << "ALiVE eXtension Platform (AXP) unloaded";
 	}
 
 
@@ -207,14 +211,14 @@ int main(int argc, const char* argv[])
 		char output_buffer[output_buffer_size];
 
 		char status_code;
-		cout << "Status Code [0,255]: ";
+		cout << "Status Code [1,14]: ";
 		scanf("%hhu", &status_code);
 		cout << "\n\n";
 
 		input_data.push_back(status_code);
 
 		std::string enter_type;
-		cout << "Enter SQF [V]ariable(s), Raw [D]ata, or [N]othing? [v/d/n]: ";
+		cout << "Enter SQF [v]ariable(s), raw [d]ata, or [n]othing? [v/d/n]: ";
 		cin >> enter_type;
 		cout << "\n\n";
 
@@ -225,7 +229,7 @@ int main(int argc, const char* argv[])
 				string var_status;
 				do {
 					char sqf_var_type;
-					cout << "SQF Variable Type [0,255]: ";
+					cout << "SQF Variable Type [1,16]: ";
 					scanf("%hhu", &sqf_var_type);
 					cout << "\n";
 

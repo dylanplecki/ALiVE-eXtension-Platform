@@ -99,25 +99,36 @@ namespace axp
 			else
 			{
 				str_data = new std::string(parse_string);
-				type_ = static_cast<data_type>((*str_data)[0]);
-				str_data->erase(0, 1);
+				type_ = static_cast<data_type>((*str_data)[0] - 1);
+				str_data->erase(0, 1); // TODO: Consider revising for performance?
 			}
 
 			switch (type_)
 			{
-			case array:
+			case array: // TODO: Refractor array case
 				{
 					std::vector<sqf::variable> var_array = *(new std::vector<sqf::variable>);
 
-					size_t start_pos = 0;
+					// Record Separator (UTF+001E &#30) or Unit Separator (UTF+001F &#31)
 
-					for (size_t cur_pos = 0; (cur_pos < str_data->size()) && ((*str_data)[cur_pos] != 30); ++cur_pos) // Record Separator (UTF+001E &#30)
-					{
-						if ((*str_data)[cur_pos] == 31) // Unit Separator (UTF+001F &#31)
-						{
-							var_array.emplace_back(str_data->substr(start_pos, cur_pos));
-							start_pos = cur_pos + 1;
-						}
+					const size_t fin_pos = str_data->find_last_of(30);
+					size_t cur_pos = 0;
+					size_t end_pos = 1;
+					size_t a_delim;
+
+					while (end_pos < fin_pos) {
+						if ((*str_data)[cur_pos] == array)
+							a_delim = 30;
+						else
+							a_delim = 31;
+
+						end_pos = str_data->find(a_delim, cur_pos);
+
+						if (end_pos == std::string::npos)
+							end_pos = fin_pos;
+
+						var_array.emplace_back(str_data->substr(cur_pos, end_pos - cur_pos));
+						cur_pos = end_pos + 1;
 					}
 
 					data_ = &var_array;
