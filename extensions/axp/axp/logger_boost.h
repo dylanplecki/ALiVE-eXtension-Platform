@@ -10,6 +10,7 @@
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 
+// Defines
 #define AXP_LOG_STREAM_WITH_PARAMS(params_seq) \
 	BOOST_LOG_STREAM_WITH_PARAMS(axp::logger::global_logger, (boost::log::keywords::channel = "global")params_seq)
 
@@ -18,6 +19,7 @@
 
 #define AXP_LOG_STREAM_SEV(lvl) \
 	AXP_LOG_STREAM_WITH_PARAMS((boost::log::keywords::severity = axp::logger::lvl))
+
 
 namespace axp
 {

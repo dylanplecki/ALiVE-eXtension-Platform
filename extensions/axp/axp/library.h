@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+
+// Platform Specific Defines
 #if defined(_WIN32) || defined(_WIN64)
 	#define WIN32_LEAN_AND_MEAN
 	#include <Windows.h>
@@ -18,6 +20,7 @@
 // Exception Codes
 #define E_LIB_NOT_FOUND 0
 #define E_FUNC_NOT_FOUND 1
+
 
 namespace axp
 {

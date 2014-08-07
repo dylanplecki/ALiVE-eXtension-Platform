@@ -14,6 +14,7 @@ namespace axp
 	{
 		logger_type global_logger(boost::log::keywords::severity = info);
 
+
 		std::ostream& operator<< (std::ostream& strm, severity_level level)
 		{
 			static const char* strings[] =
@@ -33,6 +34,7 @@ namespace axp
 
 			return strm;
 		}
+
 
 		void initialize(const char* log_file, const char* log_format, const severity_level &log_level)
 		{

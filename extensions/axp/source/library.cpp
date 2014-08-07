@@ -26,6 +26,7 @@ namespace axp
 			throw E_LIB_NOT_FOUND;
 	}
 
+
 	library::~library()
 	{
 		#if defined(_WIN32) || defined(_WIN64)
@@ -36,6 +37,7 @@ namespace axp
 			#error Cannot preprocess 'axp::library' object destructor: OS not supported
 		#endif
 	}
+
 
 	f_export library::load_function(const char* function_name)
 	{

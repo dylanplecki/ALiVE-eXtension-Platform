@@ -7,6 +7,7 @@
 // Key Files
 #include <keys/auth.key>
 
+
 // Defines
 #define E_LIB_PATH_NOT_FOUND 0
 
@@ -19,6 +20,7 @@
 		temp_record.push_back('\"'); \
 		strncpy(output_buffer, temp_record.c_str(), output_size); \
 	}
+
 
 namespace axp
 {
