@@ -3,12 +3,6 @@
 #include <axp/stdafx.h>
 #include <axp/package.h>
 
-// STD Headers
-#include <algorithm>
-
-// Boost Headers
-#include <boost/utility/string_ref.hpp>
-
 
 namespace axp
 {

@@ -7,6 +7,7 @@
 #include <axp/handler.h>
 #include <axp/logger_boost.h>
 #include <axp/protocol_def.h>
+#include <axp/sqf_object.h>
 
 
 namespace axp
@@ -221,11 +222,12 @@ namespace axp
 
 			case SF_TEST: // Create a package and return handle
 				{
-					std::shared_ptr<package> func_package(new package(input_data, input_size));
-					func_package->write_sink(input_data);
-					add_to_storage(func_package);
+					package* func_package = new package(input_data, input_size - 1);
+					std::shared_ptr<package> func_package_ptr(func_package);
+					func_package->write_sink(func_package->sqf_data().compile().c_str());
+					add_to_storage(func_package_ptr);
 					output_status = SF_HANDLE;
-					export_address(func_package.get(), output_buffer);
+					export_address(func_package, output_buffer);
 				}
 				break;
 

@@ -3,6 +3,7 @@
 /* Defines */
 /***********/
 
+#define DEBUG_MODE true
 #define EXTENSION_NAME "axp" // .dll | .so
 
 #define TYPE_ARRAY ["ARRAY", "BOOL", "CODE", "CONFIG", "CONTROL", \
@@ -15,13 +16,19 @@
 
 #define DEFAULT_ARGUMENT(idx,dft) (if ((count _this) > idx) then {_this select idx} else {dft})
 
+#ifdef DEBUG_MODE
+	#define TRACE_POINT (diag_log text format["ALiVE_SYS_AXP <%1>: TRACE POINT #%2", round(diag_tickTime * 100) / 100, __LINE__])
+#else
+	#define TRACE_POINT
+#endif
+
 /*************/
 /* Variables */
 /*************/
 
 alive_sys_axp = false;
 alive_sys_axp_handlers = [[],[]]; // Hash table
-alive_sys_axp_ext_loop_delay = 0; // Second(s)
+alive_sys_axp_ext_loop_delay = 0.00001; // Second(s)
 
 /*********************/
 /* General Functions */
@@ -88,9 +95,11 @@ alive_fnc_axpGetExtOutput = {
 	for "_i" from 0 to 1 step 0 do // For performance
 	{
 		_int_data = [4, _handle] call alive_fnc_axpCallExt;
-		if (_int_data isEqualTo "") exitWith {};
+		if ((_int_data isEqualTo "") || {_int_data isEqualTo ""}) exitWith {}; // SF_NONE
 		_data = _data + _int_data;
 	};
+	
+	if (_int_data isEqualTo "") exitWith {nil}; // Return
 	
 	call compile (_data + "]") // Return
 };
@@ -232,18 +241,21 @@ alive_fnc_axpSpawnHandlers = {
 private ["_version"];
 _version = [[10] call alive_fnc_axpCallExt] call alive_fnc_axpParseExtOutput;
 
-if ((_version select 0) == 2)
+if ((_version select 0) == 2) then // SF_GOOD
 {
 	// Add session end handler
-	addMissionEventHandler ["Ended",{[9] call alive_fnc_axpCallExt}];
+	addMissionEventHandler ["Ended",{[9] call alive_fnc_axpCallExt}]; // SF_DEL_SESSION
 	
 	// Start new session
-	[8] call alive_fnc_axpCallExt;
+	[8] call alive_fnc_axpCallExt; // SF_NEW_SESSION
 	
 	alive_sys_axp_ext_version = _version select 1;
 	alive_sys_axp = true;
 	
 	// Run extension handler loop
+	alive_sys_axp_extHandlerFSM = [] execFSM "\x\alive\addons\sys_axp\fsm\axpExtHandler.fsm";
+	
+	/*
 	0 spawn
 	{
 		private ["_new_handle_data", "_handle"];
@@ -262,4 +274,5 @@ if ((_version select 0) == 2)
 			sleep alive_sys_axp_ext_loop_delay; // Wait till next tick
 		};
 	};
+	*/
 };
