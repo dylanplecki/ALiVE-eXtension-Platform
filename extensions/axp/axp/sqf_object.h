@@ -1,5 +1,8 @@
 #pragma once
 
+// Program Headers
+#include <axp/linkages.h>
+
 // STD Headers
 #include <string>
 #include <vector>
@@ -31,9 +34,9 @@ namespace axp
 			name_space	// std::string
 		};
 
-		static const char* data_type_names[] = { "ARRAY", "BOOL", "CODE", "CONFIG", "CONTROL", "DISPLAY", "GROUP", "LOCATION", "" /* "NIL" */, "OBJECT", "SCALAR", "SCRIPT", "SIDE", "STRING", "TEXT", "NAMESPACE" };
+		LibLink extern const char* data_type_names[];
 
-		class variable
+		class LibLink variable
 		{
 		protected:
 			data_type type_;

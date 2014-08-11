@@ -26,4 +26,7 @@
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
 
+// Program Headers
+#include <axp/linkages.h>
+
 #endif // USE_PCH

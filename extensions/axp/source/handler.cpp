@@ -53,55 +53,55 @@ namespace axp
 	}
 
 
-	size_t handler::input_size()
+	size_t handler::input_size() const
 	{
 		return internals_->package_handle_->source_size();
 	}
 
 
-	const char* handler::input_source()
+	const char* handler::input_source() const
 	{
 		return internals_->package_handle_->read_source();
 	}
 
 
-	const sqf::variable& handler::input_data()
+	const sqf::variable& handler::input_data() const
 	{
 		return internals_->package_handle_->sqf_data();
 	}
 
 
-	bool handler::check_async()
+	bool handler::check_async() const
 	{
 		return internals_->async_;
 	}
 
 
-	bool handler::active_session()
+	bool handler::active_session() const
 	{
 		return internals_->session_handle_->active();
 	}
 
 
-	const std::string& handler::working_directory()
+	const std::string& handler::working_directory() const
 	{
 		return current_lib_path;
 	}
 
 
-	void handler::log(const char* message)
+	void handler::log(const char* message) const
 	{
 		axp_HANDLER_LOG_MSG(internals_->logger_, message);
 	}
 
 
-	void handler::log(const char* message, const logger::severity_level &severity)
+	void handler::log(const char* message, const logger::severity_level &severity) const
 	{
 		axp_HANDLER_LOG_MSG_WITH_PARAMS(internals_->logger_, message, (boost::log::keywords::severity = severity));
 	}
 
 
-	void handler::export_data(const char* output_data)
+	void handler::export_data(const char* output_data) const
 	{
 		std::lock_guard<std::mutex> lock(internals_->main_lock_);
 
@@ -112,19 +112,25 @@ namespace axp
 	}
 
 
-	void handler::export_data(const sqf::variable& output_data)
+	void handler::export_data(const std::string &output_data) const
+	{
+		export_data(output_data.c_str());
+	}
+
+
+	void handler::export_data(const sqf::variable& output_data) const
 	{
 		export_data(output_data.to_string().c_str());
 	}
 
 
-	void handler::attach_thread(std::thread* new_thread)
+	void handler::attach_thread(std::thread* new_thread) const
 	{
 		attach_thread(std::shared_ptr<std::thread>(new_thread));
 	}
 
 
-	void handler::attach_thread(const std::shared_ptr<std::thread> &new_thread)
+	void handler::attach_thread(const std::shared_ptr<std::thread> &new_thread) const
 	{
 		std::lock_guard<std::mutex> lock(internals_->main_lock_);
 		internals_->attached_threads_.push_back(new_thread);

@@ -80,7 +80,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>AXP_MAIN_DLL;WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -93,7 +93,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>AXP_MAIN_DLL;WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -108,7 +108,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;USE_PCH;NDEBUG;_WINDOWS;_USRDLL;AXP_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>AXP_MAIN_DLL;WIN32;USE_PCH;NDEBUG;_WINDOWS;_USRDLL;AXP_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -122,6 +122,7 @@
   <ItemGroup>
     <ClInclude Include="axp\handler.h" />
     <ClInclude Include="axp\library.h" />
+    <ClInclude Include="axp\linkages.h" />
     <ClInclude Include="axp\logger.h" />
     <ClInclude Include="axp\logger_boost.h" />
     <ClInclude Include="axp\package.h" />
