@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="src\dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="axp_test.cpp">
+    <ClCompile Include="src\axp_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

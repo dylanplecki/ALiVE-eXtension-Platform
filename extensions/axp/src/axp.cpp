@@ -178,10 +178,12 @@ void EXPORT_CALL_TYPE RVExtension(char *output_buffer, int output_size, const ch
 			*output_status = SF_GOOD;
 			break;
 
+		/*
 		case SF_AUTH: // Get extension authorization key
 			OUTPUT_STRING(KEY_AUTH_MAIN);
 			*output_status = SF_GOOD;
 			break;
+		*/
 
 		default: // Find current session and run
 			if (output_size > 1)

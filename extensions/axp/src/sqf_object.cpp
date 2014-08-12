@@ -11,7 +11,7 @@ namespace axp
 {
 	namespace sqf
 	{
-		LibLink const char* data_type_names[] = { "ARRAY", "BOOL", "CODE", "CONFIG", "CONTROL", "DISPLAY", "GROUP", "LOCATION", "" /* "NIL" */, "OBJECT", "SCALAR", "SCRIPT", "SIDE", "STRING", "TEXT", "NAMESPACE" };
+		const char* data_type_names[] { "ARRAY", "BOOL", "CODE", "CONFIG", "CONTROL", "DISPLAY", "GROUP", "LOCATION", "" /* "NIL" */, "OBJECT", "SCALAR", "SCRIPT", "SIDE", "STRING", "TEXT", "NAMESPACE" };
 
 		void variable::copy_data(const variable &from)
 		{

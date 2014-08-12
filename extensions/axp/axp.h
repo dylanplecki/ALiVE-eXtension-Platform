@@ -4,9 +4,6 @@
 #include <memory>
 #include <string>
 
-// Key Files
-#include <keys/auth.key>
-
 
 // Defines
 #define E_LIB_PATH_NOT_FOUND 0

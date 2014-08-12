@@ -55,14 +55,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Console|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
@@ -70,7 +70,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
@@ -82,6 +82,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>AXP_MAIN_DLL;WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -95,6 +97,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>AXP_MAIN_DLL;WIN32;USE_PCH;_DEBUG;_WINDOWS;_USRDLL;ADP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -111,6 +115,8 @@
       <PreprocessorDefinitions>AXP_MAIN_DLL;WIN32;USE_PCH;NDEBUG;_WINDOWS;_USRDLL;AXP_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PrecompiledHeaderFile>axp/stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,24 +126,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="axp\handler.h" />
-    <ClInclude Include="axp\library.h" />
-    <ClInclude Include="axp\linkages.h" />
-    <ClInclude Include="axp\logger.h" />
-    <ClInclude Include="axp\logger_boost.h" />
-    <ClInclude Include="axp\package.h" />
-    <ClInclude Include="axp\protocol_def.h" />
-    <ClInclude Include="axp\resource.h" />
-    <ClInclude Include="axp\axp.h" />
-    <ClInclude Include="axp\session.h" />
-    <ClInclude Include="axp\stdafx.h" />
-    <ClInclude Include="axp\version.h" />
-    <ClInclude Include="keys\auth.h" />
-    <ClInclude Include="axp\sqf_object.h" />
+    <ClInclude Include="handler.h" />
+    <ClInclude Include="library.h" />
+    <ClInclude Include="linkages.h" />
+    <ClInclude Include="logger.h" />
+    <ClInclude Include="logger_boost.h" />
+    <ClInclude Include="package.h" />
+    <ClInclude Include="protocol_def.h" />
+    <ClInclude Include="rsc\resource.h" />
+    <ClInclude Include="axp.h" />
+    <ClInclude Include="session.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="sqf_object.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\axp.cpp" />
-    <ClCompile Include="source\dllmain.cpp">
+    <ClCompile Include="src\axp.cpp" />
+    <ClCompile Include="src\dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug-Console|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -148,12 +153,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="source\handler.cpp" />
-    <ClCompile Include="source\library.cpp" />
-    <ClCompile Include="source\logger.cpp" />
-    <ClCompile Include="source\package.cpp" />
-    <ClCompile Include="source\session.cpp" />
-    <ClCompile Include="source\stdafx.cpp">
+    <ClCompile Include="src\handler.cpp" />
+    <ClCompile Include="src\library.cpp" />
+    <ClCompile Include="src\logger.cpp" />
+    <ClCompile Include="src\package.cpp" />
+    <ClCompile Include="src\session.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Console|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -161,14 +166,13 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Console|Win32'">axp/stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">axp/stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="source\sqf_object.cpp" />
+    <ClCompile Include="src\sqf_object.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="axp.rc" />
+    <ResourceCompile Include="rsc\axp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="axp.aps" />
-    <None Include="keys\auth.key" />
+    <None Include="rsc\axp.aps" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

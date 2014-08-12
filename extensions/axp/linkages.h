@@ -6,7 +6,7 @@
 		#define LibLink __declspec(dllimport)
 	#endif
 #elif defined(__linux)
-
+	// TODO
 #else
 	#error Cannot resolve linkages: OS not supported
 #endif
