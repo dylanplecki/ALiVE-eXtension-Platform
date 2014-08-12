@@ -40,7 +40,7 @@ namespace axp
 
 		void export_data(const char* output_data) const;
 		void export_data(const std::string &output_data) const;
-		void export_data(const sqf::variable& output_data) const;
+		void export_data(const sqf::variable &output_data) const;
 
 		void attach_thread(std::thread* new_thread) const;
 		void attach_thread(const std::shared_ptr<std::thread> &new_thread) const;
