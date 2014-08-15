@@ -284,9 +284,6 @@ namespace axp
 						{
 							lib_function(func_handler);
 							output_status = export_package(func_package, output_size, output_buffer);
-
-							if (func_handler)
-								delete func_handler;
 						}
 					}
 					else

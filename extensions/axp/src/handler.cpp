@@ -33,7 +33,7 @@ namespace axp
 
 	handler::~handler()
 	{
-		main_lock_.lock();
+		//main_lock_.lock();
 	}
 
 

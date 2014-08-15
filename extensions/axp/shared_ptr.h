@@ -6,8 +6,6 @@
 
 namespace axp
 {
-	template std::map<void*, size_t>;
-
 	template<class T>
 	class shared_ptr
 	{
@@ -61,7 +59,7 @@ namespace axp
 
 		LibLink ~shared_ptr()
 		{
-			reset();
+			decrement(data_);
 		}
 
 
