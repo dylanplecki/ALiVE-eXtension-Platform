@@ -38,7 +38,7 @@
 
 namespace axp
 {
-	std::shared_ptr<session> current_session;
+	axp::shared_ptr<session> current_session;
 	std::string current_lib_path;
 
 
@@ -121,7 +121,7 @@ namespace axp
 	char start_new_session()
 	{
 		stop_current_session();
-		current_session = std::make_shared<session>();
+		current_session.set(new session);
 		AXP_LOG_STREAM_SEV(info) << "New native session started";
 		return SF_GOOD;
 	}

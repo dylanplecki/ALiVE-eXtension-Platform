@@ -1,5 +1,8 @@
 #pragma once
 
+// Program Headers
+#include <axp/shared_ptr.h>
+
 // STD Headers
 #include <memory>
 #include <string>
@@ -23,7 +26,7 @@ namespace axp
 {
 	class session; // Defined in <src/session.cpp>
 
-	extern std::shared_ptr<session> current_session;
+	extern axp::shared_ptr<session> current_session;
 	extern std::string current_lib_path;
 
 	std::string lib_path();

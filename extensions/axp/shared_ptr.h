@@ -6,6 +6,8 @@
 
 namespace axp
 {
+	template std::map<void*, size_t>;
+
 	template<class T>
 	class shared_ptr
 	{
@@ -35,35 +37,41 @@ namespace axp
 			{
 				if (data_map_[index])
 					data_map_[index] -= 1;
+
+				if (!data_map_[index])
+				{
+					delete index;
+					data_map_.erase(index);
+				}
 			}
 		}
 
 
 	public:
-		shared_ptr() : data_(nullptr)
+		LibLink shared_ptr() : data_(nullptr)
 		{
 		}
 
 
-		shared_ptr(T* data) : data_(data)
+		LibLink shared_ptr(T* data) : data_(data)
 		{
 			increment(data_);
 		}
 
 
-		~shared_ptr()
+		LibLink ~shared_ptr()
 		{
 			reset();
 		}
 
 
-		shared_ptr(const shared_ptr& from) : data_(from.data_)
+		LibLink shared_ptr(const shared_ptr& from) : data_(from.data_)
 		{
 			increment(data_);
 		}
 
 
-		shared_ptr& operator=(const shared_ptr& from)
+		LibLink shared_ptr& operator=(const shared_ptr& from)
 		{
 			if (data_)
 				reset();
@@ -74,42 +82,42 @@ namespace axp
 		}
 
 
-		void set(T* data)
+		LibLink void set(T* data)
 		{
+			reset();
 			data_ = data;
 			increment(data_);
 		}
 
 
-		void reset()
+		LibLink void reset()
 		{
 			decrement(data_);
-
-			if (!data_map_[data_])
-			{
-				delete data_;
-				data_map_.erase(data_);
-			}
-
 			data_ = nullptr;
 		}
 
 
-		T* get() const
+		LibLink T* get() const
 		{
 			return data_;
 		}
 
 
-		T& operator*() const
+		LibLink T& operator*() const
 		{
 			return *data_;
 		}
 
 
-		T* operator->() const
+		LibLink T* operator->() const
 		{
 			return data_;
+		}
+
+
+		LibLink operator bool() const
+		{
+			return (data_ != nullptr);
 		}
 	};
 

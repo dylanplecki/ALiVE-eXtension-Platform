@@ -8,6 +8,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axp_test", "axp_test\axp_test.vcxproj", "{B9F1B4B6-7BE0-4380-9234-31F12452447E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "axp_console", "axp_console\axp_console.csproj", "{0808C44E-FEE6-4289-A77D-4826C2AA770D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDD1ABA4-B975-4EC3-8DBF-EC35558E361D} = {FDD1ABA4-B975-4EC3-8DBF-EC35558E361D}
+		{B9F1B4B6-7BE0-4380-9234-31F12452447E} = {B9F1B4B6-7BE0-4380-9234-31F12452447E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axp_testing_console", "axp_testing_console\axp_testing_console.vcxproj", "{ED58072F-2E48-4871-AECF-9FA7214E0CBF}"
 	ProjectSection(ProjectDependencies) = postProject

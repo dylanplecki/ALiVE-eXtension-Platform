@@ -19,7 +19,7 @@ namespace axp
 	class package; // Defined in <src/package.cpp>
 	class session; // Defined in <src/session.cpp>
 
-	class LibLink handler
+	class handler
 	{
 	private:
 		bool async_;
@@ -28,22 +28,22 @@ namespace axp
 		axp::shared_ptr<package> package_handle_;
 
 	public:
-		handler(session* parent_session, package* call_package, bool async);
-		~handler();
+		LibLink handler(session* parent_session, package* call_package, bool async);
+		LibLink ~handler();
 
-		size_t input_size() const;
-		const char* input_source() const;
-		const sqf::variable& input_data() const;
+		LibLink size_t input_size() const;
+		LibLink const char* input_source() const;
+		LibLink const sqf::variable& input_data() const;
 
-		bool check_async() const;
-		bool active_session() const;
-		const std::string& working_directory() const;
+		LibLink bool check_async() const;
+		LibLink bool active_session() const;
+		LibLink const std::string& working_directory() const;
 
-		void log(const char* message) const;
-		void log(const char* message, const logger::severity_level &severity) const;
+		LibLink void log(const char* message) const;
+		LibLink void log(const char* message, const logger::severity_level &severity) const;
 
-		void export_data(const char* output_data);
-		void export_data(const std::string &output_data);
-		void export_data(const sqf::variable &output_data);
+		LibLink void export_data(const char* output_data);
+		LibLink void export_data(const std::string &output_data);
+		LibLink void export_data(const sqf::variable &output_data);
 	};
 }

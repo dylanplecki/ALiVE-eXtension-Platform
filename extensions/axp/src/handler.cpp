@@ -7,7 +7,7 @@
 #include <axp/logger_boost.h>
 
 
-#define axp_HANDLER_LOG_MSG_WITH_PARAMS(logger, message, params_seq) \
+#define AXP_HANDLER_LOG_MSG_WITH_PARAMS(logger, message, params_seq) \
 	boost::log::record rec = logger.open_record((BOOST_PP_SEQ_ENUM((boost::log::keywords::channel = "handlers")params_seq))); \
 	if (rec) \
 	{ \
@@ -17,8 +17,8 @@
 		logger.push_record(boost::move(rec)); \
 	}
 
-#define axp_HANDLER_LOG_MSG(logger, message) \
-	axp_HANDLER_LOG_MSG_WITH_PARAMS(logger, message,)
+#define AXP_HANDLER_LOG_MSG(logger, message) \
+	AXP_HANDLER_LOG_MSG_WITH_PARAMS(logger, message, )
 
 
 namespace axp
@@ -75,13 +75,13 @@ namespace axp
 
 	void handler::log(const char* message) const
 	{
-		axp_HANDLER_LOG_MSG(logger::global_logger, message);
+		AXP_HANDLER_LOG_MSG(logger::global_logger, message);
 	}
 
 
 	void handler::log(const char* message, const logger::severity_level &severity) const
 	{
-		axp_HANDLER_LOG_MSG_WITH_PARAMS(logger::global_logger, message, (boost::log::keywords::severity = severity));
+		AXP_HANDLER_LOG_MSG_WITH_PARAMS(logger::global_logger, message, (boost::log::keywords::severity = severity));
 	}
 
 

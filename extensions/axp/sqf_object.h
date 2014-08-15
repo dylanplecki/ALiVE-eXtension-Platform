@@ -36,7 +36,7 @@ namespace axp
 
 		LibLink extern const char* data_type_names[];
 
-		class LibLink variable
+		class variable
 		{
 		protected:
 			data_type type_;
@@ -45,30 +45,30 @@ namespace axp
 			void copy_data(const variable &from);
 
 		public:
-			variable();
-			variable(const data_type &data_type);
-			variable(const variable &ref_object);
-			variable(const std::string &parse_string); // passed data_type is index+1
-			variable(const data_type &type, void* value);
-			~variable();
+			LibLink variable();
+			LibLink variable(const data_type &data_type);
+			LibLink variable(const variable &ref_object);
+			LibLink variable(const std::string &parse_string); // passed data_type is index+1
+			LibLink variable(const data_type &type, void* value);
+			LibLink ~variable();
 
 			// General Behaviors
-			data_type type() const;
-			std::string compile() const;
-			std::string type_name() const;
-			bool is_kind_of(const data_type &type) const;
-			bool is_kind_of(const variable &op_var) const;
+			LibLink data_type type() const;
+			LibLink std::string compile() const;
+			LibLink std::string type_name() const;
+			LibLink bool is_kind_of(const data_type &type) const;
+			LibLink bool is_kind_of(const variable &op_var) const;
 
 			// General Operators
-			operator bool() const;								// Boolean
-			variable operator= (const variable &op_var);		// Assignment
-			bool operator== (const variable &op_var) const;		// Equal to
+			LibLink operator bool() const;								// Boolean
+			LibLink variable operator= (const variable &op_var);		// Assignment
+			LibLink bool operator== (const variable &op_var) const;		// Equal to
 
 			// General Accessors
-			float to_float() const;
-			uint32_t to_int() const;
-			std::string to_string() const;
-			std::vector<sqf::variable> to_vector() const;
+			LibLink float to_float() const;
+			LibLink uint32_t to_int() const;
+			LibLink std::string to_string() const;
+			LibLink std::vector<sqf::variable> to_vector() const;
 		};
 	}
 }
