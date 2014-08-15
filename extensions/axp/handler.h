@@ -3,6 +3,7 @@
 // Program Headers
 #include <axp/linkages.h>
 #include <axp/logger.h>
+#include <axp/shared_ptr.h>
 #include <axp/sqf_object.h>
 
 // STD Headers
@@ -23,8 +24,8 @@ namespace axp
 	private:
 		bool async_;
 		std::mutex main_lock_;
-		std::shared_ptr<session> session_handle_;
-		std::shared_ptr<package> package_handle_;
+		axp::shared_ptr<session> session_handle_;
+		axp::shared_ptr<package> package_handle_;
 
 	public:
 		handler(session* parent_session, package* call_package, bool async);

@@ -17,10 +17,18 @@ namespace axp
 		void decrement(void* index);
 
 	public:
+		shared_ptr();
 		shared_ptr(T* data);
 		~shared_ptr();
 
+		shared_ptr(const shared_ptr& from);
+		shared_ptr& operator=(const shared_ptr& from);
+
 		void set(T* data);
 		void reset();
+
+		T* get() const;
+		T& operator*() const;
+		T* operator->() const;
 	};
 }

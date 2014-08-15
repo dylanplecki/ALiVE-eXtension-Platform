@@ -15,7 +15,7 @@ namespace axp
 	extern std::string current_lib_path; // Defined in <axp/axp.cpp>
 
 
-	void session::add_to_storage(const std::shared_ptr<package> &package_ref)
+	void session::add_to_storage(const axp::shared_ptr<package> &package_ref)
 	{
 		std::lock_guard<std::mutex> lock(storage_lock_);
 		auto package_ptr_int = reinterpret_cast<std::uintptr_t>(package_ref.get());
@@ -40,7 +40,7 @@ namespace axp
 	}
 
 
-	void session::remove_from_storage(const std::shared_ptr<package> &package_ref)
+	void session::remove_from_storage(const axp::shared_ptr<package> &package_ref)
 	{
 		remove_from_storage(package_ref.get());
 	}
@@ -85,7 +85,7 @@ namespace axp
 				std::lock_guard<std::mutex> lock(lib_lock_);
 
 				if (!loaded_lib_map_.count(lib_name))
-					loaded_lib_map_[lib_name] = std::shared_ptr<library>(new library(lib_path.c_str()));
+					loaded_lib_map_[lib_name] = axp::shared_ptr<library>(new library(lib_path.c_str()));
 
 				return loaded_lib_map_[lib_name]->load_function(func_name.c_str());
 			}
@@ -136,7 +136,7 @@ namespace axp
 	}
 
 
-	char session::export_package(const std::shared_ptr<package> &output_package, size_t output_size, char* output_buffer)
+	char session::export_package(const axp::shared_ptr<package> &output_package, size_t output_size, char* output_buffer)
 	{
 		if (output_package->sink_size() <= (size_t)output_size)
 		{
@@ -159,7 +159,7 @@ namespace axp
 
 		if (package_output_queue_.size() > 0)
 		{
-			std::shared_ptr<package> output_package = package_output_queue_.front();
+			axp::shared_ptr<package> output_package = package_output_queue_.front();
 			package_output_queue_.pop();
 			lock.unlock();
 			add_to_storage(output_package);
@@ -192,7 +192,7 @@ namespace axp
 	}
 
 
-	void session::queue_output(const std::shared_ptr<package> &package_handle)
+	void session::queue_output(const axp::shared_ptr<package> &package_handle)
 	{
 		std::lock_guard<std::mutex> lock(queue_lock_);
 		package_output_queue_.push(package_handle);
@@ -223,7 +223,7 @@ namespace axp
 			case SF_TEST: // Create a package and return handle
 				{
 					package* func_package = new package(input_data, input_size - 1);
-					std::shared_ptr<package> func_package_ptr(func_package);
+					axp::shared_ptr<package> func_package_ptr(func_package);
 					func_package->write_sink(func_package->sqf_data().compile().c_str());
 					add_to_storage(func_package_ptr);
 					output_status = SF_HANDLE;
@@ -269,7 +269,7 @@ namespace axp
 					if (lib_function)
 					{
 						const bool async = (input_status == SF_ASYNC);
-						std::shared_ptr<package> func_package(new package(arguments, strlen(arguments)));
+						axp::shared_ptr<package> func_package(new package(arguments, strlen(arguments)));
 						handler* func_handler(new handler(this, func_package.get(), async));
 
 						if (async) // Asynchronous execution
