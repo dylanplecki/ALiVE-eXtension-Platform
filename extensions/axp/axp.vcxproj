@@ -142,7 +142,6 @@
     <ClInclude Include="sqf_object.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\shared_ptr.cpp" />
     <ClCompile Include="src\axp.cpp" />
     <ClCompile Include="src\dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
