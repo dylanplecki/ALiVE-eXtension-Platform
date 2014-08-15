@@ -49,9 +49,20 @@ namespace axp
 			try
 			{
 				#if defined(_WIN32) || defined(_WIN64)
-					function = reinterpret_cast<f_export>(GetProcAddress(module_, function_name));
+					
+					// For WINAPI __stdcall
+					std::string func_name_stdcall;
+					func_name_stdcall.push_back('_');
+					func_name_stdcall.append(function_name);
+					func_name_stdcall.push_back('@');
+					func_name_stdcall.append(std::to_string(sizeof(F_EXPORT_HANDLER_PTR_T)));
+					
+					function = reinterpret_cast<f_export>(GetProcAddress(module_, func_name_stdcall.c_str()));
+
 				#elif defined(__linux)
+					
 					function = reinterpret_cast<f_export>(dlsym(module_, function_name));
+
 				#else
 					#error Cannot preprocess 'axp::library' object member function 'load_function': OS not supported
 				#endif

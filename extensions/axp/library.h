@@ -1,10 +1,14 @@
 #pragma once
 
 // STD Headers
+#include <memory>
 #include <mutex>
 #include <string>
 #include <unordered_map>
 
+
+// General Defines
+#define F_EXPORT_HANDLER_PTR_T axp::handler*
 
 // Platform Specific Defines
 #if defined(_WIN32) || defined(_WIN64)
@@ -26,7 +30,7 @@ namespace axp
 {
 	class handler; // Defined in <src/handler.cpp>
 
-	typedef void(EXPORT_CALL_TYPE *f_export)(handler);
+	typedef void(EXPORT_CALL_TYPE *f_export)(F_EXPORT_HANDLER_PTR_T);
 	typedef std::unordered_map<std::string, f_export> function_lookup_list;
 
 	class library

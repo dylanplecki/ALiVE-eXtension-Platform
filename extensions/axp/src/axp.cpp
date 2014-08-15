@@ -121,7 +121,7 @@ namespace axp
 	char start_new_session()
 	{
 		stop_current_session();
-		current_session = std::shared_ptr<session>(new session);
+		current_session = std::make_shared<session>();
 		AXP_LOG_STREAM_SEV(info) << "New native session started";
 		return SF_GOOD;
 	}
@@ -134,7 +134,7 @@ namespace axp
 	
 	extern "C"
 	{
-		__declspec(dllexport) void EXPORT_CALL_TYPE RVExtension(char *output, int output_size, const char *function);
+		__declspec(dllexport) void EXPORT_CALL_TYPE RVExtension(char* output, int output_size, const char* function);
 	};
 
 #else
@@ -143,7 +143,7 @@ namespace axp
 
 
 // Export RVEngine extension function
-void EXPORT_CALL_TYPE RVExtension(char *output_buffer, int output_size, const char *input_data)
+void EXPORT_CALL_TYPE RVExtension(char* output_buffer, int output_size, const char* input_data)
 {
 	if (output_size > 0)
 	{
@@ -196,88 +196,4 @@ void EXPORT_CALL_TYPE RVExtension(char *output_buffer, int output_size, const ch
 		// Protect against buffer overflows
 		output_buffer[output_size - 1] = '\0';
 	}
-}
-
-
-// Standalone Operation System
-int main(int argc, const char* argv[])
-{
-	using namespace std;
-	const size_t output_buffer_size = 10240;
-
-	// Initialize library
-	axp::lib_load();
-	axp::start_new_session();
-
-	while (true) {
-		cout << "\n\n";
-
-		string input_data("");
-		char output_buffer[output_buffer_size];
-
-		char status_code;
-		cout << "Status Code [1,14]: ";
-		scanf("%hhu", &status_code);
-		cout << "\n\n";
-
-		input_data.push_back(status_code);
-
-		std::string enter_type;
-		cout << "Enter SQF [v]ariable(s), raw [d]ata, or [n]othing? [v/d/n]: ";
-		cin >> enter_type;
-		cout << "\n\n";
-
-		switch (enter_type[0])
-		{
-		case 'v':
-			{
-				string var_status;
-				do {
-					char sqf_var_type;
-					cout << "SQF Variable Type [1,16]: ";
-					scanf("%hhu", &sqf_var_type);
-					cout << "\n";
-
-					string sqf_var_data;
-					cout << "Enter Variable Data:\n\n";
-					cin >> sqf_var_data;
-					cout << "\n---\n\n";
-
-					input_data.push_back(sqf_var_type);
-					input_data.append(sqf_var_data);
-
-					cout << "Add another SQF Variable? [y/n]: ";
-					cin >> var_status;
-					cout << "\n\n---\n\n";
-				} while (tolower(var_status[0]) == 'y');
-			}
-			break;
-
-		case 'd':
-			{
-				string raw_data;
-				cout << "Enter Raw Data:\n\n";
-				cin >> raw_data;
-				cout << "\n---\n\n";
-				input_data.append(raw_data);
-			}
-			break;
-		}
-
-		cout << "Input Data: " << input_data << "\n\n";
-		cout << "Processing...\n\n";
-
-		RVExtension(output_buffer, output_buffer_size, input_data.c_str());
-
-		cout << "Output:\n";
-		cout << "    Length: " << strlen(output_buffer) << "\n";
-		cout << "    Status: " << std::to_string(output_buffer[0]) << "\n";
-		cout << "\n\n" << output_buffer << "\n\n";
-
-		system("pause");
-		cout << "\n\n-------------------------------------------------\n";
-	}
-
-	// Close library
-	axp::lib_unload();
 }

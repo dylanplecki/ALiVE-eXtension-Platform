@@ -6,12 +6,15 @@
 // Function Declarations
 extern "C"
 {
-	__declspec(dllexport) void __stdcall axp_test_function(const axp::handler &handler);
+	__declspec(dllexport) void __stdcall axp_test_function(axp::handler* handler);
 };
 
 
 // Function Definitions
-void __stdcall axp_test_function(const axp::handler &handler)
+void __stdcall axp_test_function(axp::handler* handler)
 {
-	handler.export_data("\"AXP Test Worked!\"");
+	handler->export_data("\"AXP Test Worked!\"");
+
+	// Cleanup
+	delete handler;
 }

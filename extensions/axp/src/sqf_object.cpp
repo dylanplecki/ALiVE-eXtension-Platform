@@ -95,7 +95,7 @@ namespace axp
 
 		variable::variable(const std::string &parse_string)
 		{
-			std::string* str_data;
+			std::string* str_data(nullptr);
 
 			if (parse_string.size() <= 0)
 				type_ = nil;
@@ -165,7 +165,8 @@ namespace axp
 
 			default:
 				data_ = nullptr;
-				delete str_data;
+				if (str_data)
+					delete str_data;
 				break;
 			}
 		}

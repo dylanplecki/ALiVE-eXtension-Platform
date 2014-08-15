@@ -7,6 +7,7 @@
 
 // STD Headers
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
@@ -20,11 +21,13 @@ namespace axp
 	class LibLink handler
 	{
 	private:
-		struct internals;
-		std::shared_ptr<internals> internals_;
+		bool async_;
+		std::mutex main_lock_;
+		std::shared_ptr<session> session_handle_;
+		std::shared_ptr<package> package_handle_;
 
 	public:
-		handler(const std::shared_ptr<session> &parent_session, const std::shared_ptr<package> &call_package, const bool &async);
+		handler(session* parent_session, package* call_package, bool async);
 		~handler();
 
 		size_t input_size() const;
@@ -38,11 +41,8 @@ namespace axp
 		void log(const char* message) const;
 		void log(const char* message, const logger::severity_level &severity) const;
 
-		void export_data(const char* output_data) const;
-		void export_data(const std::string &output_data) const;
-		void export_data(const sqf::variable &output_data) const;
-
-		void attach_thread(std::thread* new_thread) const;
-		void attach_thread(const std::shared_ptr<std::thread> &new_thread) const;
+		void export_data(const char* output_data);
+		void export_data(const std::string &output_data);
+		void export_data(const sqf::variable &output_data);
 	};
 }

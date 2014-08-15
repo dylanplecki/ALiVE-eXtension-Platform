@@ -270,11 +270,13 @@ namespace axp
 					{
 						const bool async = (input_status == SF_ASYNC);
 						std::shared_ptr<package> func_package(new package(arguments, strlen(arguments)));
-						handler func_handler(std::shared_ptr<session>(this), func_package, async);
+						handler* func_handler(new handler(this, func_package.get(), async));
 
 						if (async) // Asynchronous execution
 						{
-							func_handler.attach_thread(new std::thread(lib_function, func_handler));
+							std::thread new_thread(lib_function, func_handler);
+							new_thread.detach();
+
 							output_status = SF_HANDLE;
 							export_address(func_package.get(), output_buffer);
 						}
@@ -282,6 +284,9 @@ namespace axp
 						{
 							lib_function(func_handler);
 							output_status = export_package(func_package, output_size, output_buffer);
+
+							if (func_handler)
+								delete func_handler;
 						}
 					}
 					else

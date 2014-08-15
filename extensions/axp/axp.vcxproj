@@ -57,23 +57,23 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Configuration)\_output\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Console|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Configuration)\_output\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir);D:\lib\c\boost_1_55_0\;$(IncludePath)</IncludePath>
     <LibraryPath>D:\lib\c\boost_1_55_0\lib32-msvc-12.0\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\output\</IntDir>
+    <OutDir>$(SolutionDir)build\$(Configuration)\_output\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -136,11 +136,13 @@
     <ClInclude Include="rsc\resource.h" />
     <ClInclude Include="axp.h" />
     <ClInclude Include="session.h" />
+    <ClInclude Include="shared_ptr.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="sqf_object.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\shared_ptr.cpp" />
     <ClCompile Include="src\axp.cpp" />
     <ClCompile Include="src\dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
