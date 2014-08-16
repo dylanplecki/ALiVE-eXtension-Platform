@@ -28,7 +28,6 @@
 
 alive_sys_axp = false;
 alive_sys_axp_handlers = [[],[]]; // Hash table
-alive_sys_axp_ext_loop_delay = 0.00001; // Second(s)
 
 /*********************/
 /* General Functions */
@@ -99,7 +98,7 @@ alive_fnc_axpGetExtOutput = {
 		_data = _data + _int_data;
 	};
 	
-	if (_int_data isEqualTo "") exitWith {nil}; // Return
+	//if (_int_data isEqualTo "") exitWith {nil}; // Return
 	
 	call compile (_data + "]") // Return
 };
@@ -119,6 +118,10 @@ alive_fnc_axpParseExtOutput = {
 	};
 	
 	[_status, (if (isNil "_return") then {nil} else {_return})] // Return
+};
+
+alive_fnc_axpExtInfo = {
+	[([14] call alive_fnc_axpCallExt)] call alive_fnc_axpParseExtOutput;
 };
 
 /********************************/
@@ -244,7 +247,7 @@ _version = [[10] call alive_fnc_axpCallExt] call alive_fnc_axpParseExtOutput;
 if ((_version select 0) == 2) then // SF_GOOD
 {
 	// Add session end handler
-	addMissionEventHandler ["Ended",{[9] call alive_fnc_axpCallExt}]; // SF_DEL_SESSION
+	addMissionEventHandler ["Ended", {[9] call alive_fnc_axpCallExt}]; // SF_DEL_SESSION
 	
 	// Start new session
 	[8] call alive_fnc_axpCallExt; // SF_NEW_SESSION
@@ -254,25 +257,4 @@ if ((_version select 0) == 2) then // SF_GOOD
 	
 	// Run extension handler loop
 	alive_sys_axp_extHandlerFSM = [] execFSM "\x\alive\addons\sys_axp\fsm\axpExtHandler.fsm";
-	
-	/*
-	0 spawn
-	{
-		private ["_new_handle_data", "_handle"];
-		for "_i" from 0 to 1 step 0 do // Infinite loop
-		{
-			for "_i" from 0 to 1 step 0 do // For performance
-			{
-				_new_handle_data = [[1] call alive_fnc_axpCallExt] call alive_fnc_axpParseExtOutput;
-				
-				if ((_new_handle_data select 0) != 7) exitWith {}; // SF_HANDLE
-				_handle = _new_handle_data select 1;
-				
-				[_handle, ([_handle] call alive_fnc_axpGetExtOutput)] call alive_fnc_axpCallHandlers;
-			};
-			
-			sleep alive_sys_axp_ext_loop_delay; // Wait till next tick
-		};
-	};
-	*/
 };
