@@ -7,12 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axp", "axp\axp.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axp_test", "axp_test\axp_test.vcxproj", "{B9F1B4B6-7BE0-4380-9234-31F12452447E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "axp_console", "axp_console\axp_console.csproj", "{0808C44E-FEE6-4289-A77D-4826C2AA770D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FDD1ABA4-B975-4EC3-8DBF-EC35558E361D} = {FDD1ABA4-B975-4EC3-8DBF-EC35558E361D}
-		{B9F1B4B6-7BE0-4380-9234-31F12452447E} = {B9F1B4B6-7BE0-4380-9234-31F12452447E}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axp_testing_console", "axp_testing_console\axp_testing_console.vcxproj", "{ED58072F-2E48-4871-AECF-9FA7214E0CBF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B9F1B4B6-7BE0-4380-9234-31F12452447E} = {B9F1B4B6-7BE0-4380-9234-31F12452447E}
@@ -48,16 +42,6 @@ Global
 		{B9F1B4B6-7BE0-4380-9234-31F12452447E}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{B9F1B4B6-7BE0-4380-9234-31F12452447E}.Release|Win32.ActiveCfg = Release|Win32
 		{B9F1B4B6-7BE0-4380-9234-31F12452447E}.Release|Win32.Build.0 = Release|Win32
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{0808C44E-FEE6-4289-A77D-4826C2AA770D}.Release|Win32.ActiveCfg = Release|Any CPU
 		{ED58072F-2E48-4871-AECF-9FA7214E0CBF}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{ED58072F-2E48-4871-AECF-9FA7214E0CBF}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{ED58072F-2E48-4871-AECF-9FA7214E0CBF}.Debug|Mixed Platforms.Build.0 = Debug|Win32
