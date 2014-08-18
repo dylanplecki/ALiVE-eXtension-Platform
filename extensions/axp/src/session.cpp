@@ -261,29 +261,39 @@ namespace axp
 				output_status = SF_GOOD;
 				break;
 
-			case SF_SYNC: case SF_ASYNC: // Run function from library
+			case SF_SYNC: case SF_ASYNC: case SF_SYNC_SR: // Run function from library
 				{
 					const char* arguments;
 					f_export lib_function = pull_lib_function(input_data, input_size, arguments);
 
 					if (lib_function)
 					{
-						const bool async = (input_status == SF_ASYNC);
 						axp::shared_ptr<package> func_package(new package(arguments, strlen(arguments)));
-						handler* func_handler(new handler(this, func_package.get(), async));
+						handler* func_handler(new handler(this, func_package.get(), input_status));
 
-						if (async) // Asynchronous execution
+						switch (input_status)
 						{
-							std::thread new_thread(lib_function, func_handler);
-							new_thread.detach();
+						case SF_SYNC: // Synchronous execution
+							lib_function(func_handler);
+							output_status = export_package(func_package, output_size, output_buffer);
+							break;
+
+						case SF_ASYNC: // Asynchronous execution
+							{
+								std::thread new_thread(lib_function, func_handler);
+								new_thread.detach();
+
+								output_status = SF_HANDLE;
+								export_address(func_package.get(), output_buffer);
+							}
+							break;
+
+						case SF_SYNC_SR: // Synchronous execution with scheduled returns
+							lib_function(func_handler);
 
 							output_status = SF_HANDLE;
 							export_address(func_package.get(), output_buffer);
-						}
-						else // Synchronous execution
-						{
-							lib_function(func_handler);
-							output_status = export_package(func_package, output_size, output_buffer);
+							break;
 						}
 					}
 					else

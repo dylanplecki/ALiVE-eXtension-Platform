@@ -23,3 +23,4 @@
 #define SF_AUTH			12	// Get extension authorization key
 #define SF_TEST			13	// Create a package and return handle
 #define SF_INFO			14	// Return extension status and debug info
+#define SF_SYNC_SR		15	// Request for synchronous code with scheduled returns
