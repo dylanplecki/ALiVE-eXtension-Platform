@@ -26,7 +26,7 @@ namespace axp
 	extern std::string current_lib_path; // Defined in <axp/axp.h>
 
 
-	handler::handler(session* parent_session, package* call_package, bool async = false) : async_(async), session_handle_(parent_session), package_handle_(call_package)
+	handler::handler(session* parent_session, package* call_package, const size_t &exec_type = SF_SYNC) : exec_type_(exec_type), session_handle_(parent_session), package_handle_(call_package)
 	{
 	}
 
@@ -55,9 +55,9 @@ namespace axp
 	}
 
 
-	bool handler::check_async() const
+	size_t handler::exec_type() const
 	{
-		return async_;
+		return exec_type_;
 	}
 
 
@@ -91,7 +91,7 @@ namespace axp
 
 		package_handle_->write_sink(output_data);
 
-		if (async_)
+		if (exec_type_ == SF_ASYNC || exec_type_ == SF_SYNC_SR)
 			session_handle_->queue_output(package_handle_);
 	}
 
