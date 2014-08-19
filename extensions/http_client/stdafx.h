@@ -16,3 +16,8 @@
 
 // API Headers
 #include <axp\handler.h>
+
+// Casablanca REST SDK Headers
+#include <cpprest/http_client.h>
+#include <cpprest/json.h>
+#include <cpprest/uri.h>

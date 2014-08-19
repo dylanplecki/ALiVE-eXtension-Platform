@@ -15,6 +15,18 @@
 #include <vector>
 
 
+// Macros
+#define ASSERT_SQF_TYPE(SQF_OBJ, SQF_TYPE, HANDLER_PTR) \
+	if (!SQF_OBJ.is_kind_of(SQF_TYPE)) { HANDLER_PTR->log(( \
+		"A SQF object type assert test failed in function '" __FUNCTION__ "'. " \
+		"Objdump: " + SQF_OBJ.to_string()).c_str(), axp::logger::error); return; }
+
+#define ASSERT_VECTOR_LEN(VECTOR, VEC_LEN, HANDLER_PTR) \
+	if (VECTOR.size() < VEC_LEN) { HANDLER_PTR->log(( \
+		"A vector length assert test failed in function '" __FUNCTION__ "'. " \
+		"[source len] " + std::to_string(VECTOR.size()) + " != [req len] " + std::to_string(VEC_LEN)).c_str(), axp::logger::error); return; }
+
+
 namespace axp
 {
 	class package; // Defined in <src/package.cpp>
