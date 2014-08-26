@@ -16,17 +16,6 @@
 // Boost Headers
 #include <boost/utility/string_ref.hpp>
 
-// Platform Specific Defines
-#if defined(_WIN32) || defined(_WIN64)
-	#define DYNAMIC_LIBRARY_PATH "extensions\\"
-	#define DYNAMIC_LIBRARY_EXT ".dll"
-#elif defined(__linux)
-	#define DYNAMIC_LIBRARY_PATH "extensions/"
-	#define DYNAMIC_LIBRARY_EXT ".so"
-#else
-	#error Cannot load dynamic library path: OS not supported
-#endif
-
 
 namespace axp
 {

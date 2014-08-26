@@ -88,6 +88,7 @@
     <None Include="rsc\axp.aps">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="rsc\axp.rc">

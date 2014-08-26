@@ -78,14 +78,12 @@ namespace axp
 
 		if (lib_name.size() && func_name.size())
 		{
-			std::string lib_path(current_lib_path + DYNAMIC_LIBRARY_PATH + lib_name + DYNAMIC_LIBRARY_EXT);
-
 			try
 			{
 				std::lock_guard<std::mutex> lock(lib_lock_);
 
 				if (!loaded_lib_map_.count(lib_name))
-					loaded_lib_map_[lib_name] = axp::shared_ptr<library>(new library(lib_path.c_str()));
+					loaded_lib_map_[lib_name] = axp::shared_ptr<library>(new library(lib_name.c_str()));
 
 				return loaded_lib_map_[lib_name]->load_function(func_name.c_str());
 			}

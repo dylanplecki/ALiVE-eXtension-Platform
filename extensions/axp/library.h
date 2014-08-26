@@ -42,7 +42,7 @@ namespace axp
 		function_lookup_list functions_;
 
 	public:
-		library(const char* lib_path);
+		library(const std::string &lib_name);
 		~library();
 		f_export load_function(const char* function_name);
 	};

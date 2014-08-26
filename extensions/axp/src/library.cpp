@@ -4,17 +4,58 @@
 #include <axp/library.h>
 #include <axp/logger_boost.h>
 
+// Boost Headers
+#include <boost/filesystem.hpp>
+
 #if defined(__linux)
 	#include <dlfcn.h>
 #endif
 
+
+// Defines
+#define DYNAMIC_LIBRARY_FOLDER "extensions"
+
+// Platform Specific Defines
+#if defined(_WIN32) || defined(_WIN64)
+	#define DYNAMIC_LIBRARY_EXT ".dll"
+#elif defined(__linux)
+	#define DYNAMIC_LIBRARY_EXT ".so"
+#else
+	#error Cannot load dynamic library path: OS not supported
+#endif
+
+
 namespace axp
 {
-	library::library(const char* lib_path) : lib_path_(lib_path)
+	extern std::string current_lib_path;
+
+	library::library(const std::string &lib_name)
 	{
+		using namespace boost::filesystem;
+
+		std::string lib_path("");
+		path search_path(path(current_lib_path).parent_path());
+		directory_iterator search_it(search_path);
+
+		for (auto fs_obj : search_it)
+		{
+			path ext_path(fs_obj.path());
+			ext_path /= DYNAMIC_LIBRARY_FOLDER;
+			ext_path /= lib_name + DYNAMIC_LIBRARY_EXT;
+
+			if (is_regular_file(ext_path))
+			{
+				lib_path = ext_path.string();
+				break;
+			}
+		}
+
+		if (lib_path.empty())
+			throw E_LIB_NOT_FOUND;
+
 		#if defined(_WIN32) || defined(_WIN64)
 			wchar_t win_lib_path[MAX_PATH];
-			MultiByteToWideChar(CP_ACP, 0, lib_path, -1, win_lib_path, MAX_PATH);
+			MultiByteToWideChar(CP_ACP, 0, lib_path.c_str(), -1, win_lib_path, MAX_PATH);
 			module_ = LoadLibrary(win_lib_path);
 		#elif defined(__linux)
 			module_ = dlopen(lib_path, RTLD_LAZY);
@@ -41,7 +82,7 @@ namespace axp
 
 	f_export library::load_function(const char* function_name)
 	{
-		//std::unique_lock<std::mutex> lock(lib_lock_);
+		std::unique_lock<std::mutex> lock(lib_lock_);
 		f_export function = functions_[function_name];
 
 		if (!function)
