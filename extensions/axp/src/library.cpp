@@ -43,7 +43,9 @@ namespace axp
 			ext_path /= DYNAMIC_LIBRARY_FOLDER;
 			ext_path /= lib_name + DYNAMIC_LIBRARY_EXT;
 
-			if (is_regular_file(ext_path))
+			boost::system::error_code error_code;
+
+			if (is_regular_file(ext_path, error_code))
 			{
 				lib_path = ext_path.string();
 				break;
